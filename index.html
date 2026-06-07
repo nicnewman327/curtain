@@ -291,64 +291,68 @@ function setStatus(msg,type){
 function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
-function buildPrompt(prefs){
-  return 'Return a JSON array of exactly 20 UK cultural events for June-September 2026.\n'
+function buildPrompt(prefs, types){
+  return 'Return a JSON array of exactly 10 UK cultural events for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
-  +'Include exactly: 6 art, 5 theatre, 5 film, 4 tv.\n\n'
-  +'Art: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain, Barbican Black Planet.\n'
-  +'Theatre: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird, Midsummer Night Dream/Regents Park.\n'
-  +'Film: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan, My Fathers Island/Curzon, The Girls/BFI, Rosebush Pruning/MUBI.\n'
-  +'TV: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC.\n\n'
-  +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array max 3), summary(1 sentence), press(short string), matchScore(0-100), matchReason(short), artfundUrl(or null), bookingUrl(or null).';
+  +'Only include these types: '+types+'\n\n'
+  +'Art options: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain, Project a Black Planet/Barbican.\n'
+  +'Theatre options: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird West End, Midsummer Night Dream/Regents Park.\n'
+  +'Film options: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan Jul 17, My Fathers Island/Curzon, The Girls/BFI, Rosebush Pruning/MUBI.\n'
+  +'TV options: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC.\n\n'
+  +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array max 3), summary(1 sentence for their taste), press(short string), matchScore(0-100), matchReason(one short sentence), artfundUrl(or null), bookingUrl(or null).';
 }
 
-function findEvents(forceRefresh){
-  if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs);updateCacheInfo();return;}
-  setBusy(true);
-  setStatus('Finding 20 events across art, theatre, film and TV...');
-  setProg(20);
-  el('recs-empty').style.display='none';
-
-  var prefs=getPrefs();
+function callAPI(prompt, callback){
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ctrl.abort();},50000);
-
   fetch('/.netlify/functions/claude',{
     method:'POST',
     signal:ctrl.signal,
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:4096,
-      system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
-      messages:[{role:'user',content:buildPrompt(prefs)}]
+      max_tokens:3500,
+      system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks. Start with [ end with ].',
+      messages:[{role:'user',content:prompt}]
     })
   })
-  .then(function(r){
-    clearTimeout(timer);
-    return r.json().then(function(d){return{ok:r.ok,status:r.status,data:d};});
-  })
+  .then(function(r){clearTimeout(timer);return r.json().then(function(d){return{ok:r.ok,data:d};});})
   .then(function(res){
-    setProg(null);setBusy(false);
-    if(!res.ok){
-      setStatus('Error: '+((res.data&&res.data.error&&res.data.error.message)||'HTTP '+res.status),'err');
-      return;
-    }
+    if(!res.ok){callback(new Error('HTTP '+(res.data&&res.data.error&&res.data.error.message||res.status)),null);return;}
     var text=(res.data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     text=text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
-    if(!text||text[0]!=='['){setStatus('Unexpected response: '+text.substring(0,100),'err');return;}
-    try{
-      var events=JSON.parse(text);
-      if(!Array.isArray(events)||!events.length) throw new Error('Not a JSON array');
+    if(!text||text[0]!=='['){callback(new Error('Unexpected response: '+text.substring(0,60)),null);return;}
+    try{callback(null,JSON.parse(text));}
+    catch(e){callback(new Error('Parse error: '+e.message),null);}
+  })
+  .catch(function(e){clearTimeout(timer);callback(new Error(e.name==='AbortError'?'Timed out':e.message),null);});
+}
+
+function findEvents(forceRefresh){
+  if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs);updateCacheInfo();return;}
+  setBusy(true);
+  setStatus('Finding events — step 1 of 2...');
+  setProg(10);
+  el('recs-empty').style.display='none';
+  var prefs=getPrefs();
+
+  // First call: art and theatre
+  callAPI(buildPrompt(prefs,'art and theatre'),function(err1,batch1){
+    if(err1){setProg(null);setBusy(false);setStatus('Error: '+err1.message,'err');return;}
+    setStatus('Finding events — step 2 of 2...');
+    setProg(55);
+
+    // Second call: film and tv
+    callAPI(buildPrompt(prefs,'film and tv'),function(err2,batch2){
+      setProg(null);setBusy(false);
+      if(err2){setStatus('Error: '+err2.message,'err');return;}
+      var events=(batch1||[]).concat(batch2||[]);
+      if(!events.length){setStatus('No events returned','err');return;}
       S.recs=events;S.cachedAt=Date.now();persist();
       renderRecs(events);updateCacheInfo();updateCounts(events);
       setStatus('Loaded '+events.length+' events — cached for 24 hours','ok');
       setTimeout(function(){setStatus('');},6000);
-    }catch(e){setStatus('Parse error: '+e.message,'err');}
-  })
-  .catch(function(e){
-    clearTimeout(timer);setProg(null);setBusy(false);
-    setStatus(e.name==='AbortError'?'Timed out — is ANTHROPIC_API_KEY set in Netlify?':'Error: '+e.message,'err');
+    });
   });
 }
 
