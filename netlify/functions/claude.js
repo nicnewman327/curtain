@@ -7,13 +7,21 @@ exports.handler = async function(event) {
   if (!key) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set in Netlify environment variables' })
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY environment variable is not set' })
     };
   }
 
   let body;
-  try { body = JSON.parse(event.body); }
-  catch(e) { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
+  try {
+    body = JSON.parse(event.body);
+  } catch(e) {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Invalid JSON in request body' })
+    };
+  }
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -44,7 +52,8 @@ exports.handler = async function(event) {
   } catch(e) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: e.message })
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Function error: ' + e.message })
     };
   }
 };
