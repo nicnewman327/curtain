@@ -326,7 +326,7 @@ function findEvents(forceRefresh){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:2500,
+      max_tokens:3500,
       system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
       messages:[{role:'user',content:buildPrompt(prefs)}]
     })
