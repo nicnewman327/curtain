@@ -291,15 +291,18 @@ function setStatus(msg,type){
 function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
-function buildPrompt(prefs, types){
-  return 'Return a JSON array of exactly 10 UK cultural events for June-September 2026.\n'
+function buildPrompt(prefs, type){
+  var options={
+    art:'Tracey Emin/Tate Modern (until Aug), Hepworth in Colour/Courtauld (Jun-Sep), Ana Mendieta/Tate Modern (from Jul 9), Frida Kahlo/Tate Modern (from Jun 25), Hurvin Anderson/Tate Britain (until Aug), Project a Black Planet/Barbican (Jun-Sep).',
+    theatre:'Glengarry Glen Ross/Old Vic (until Jul 18), Arcadia/Duke of Yorks (Jun 20-Sep 12), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18).',
+    film:'I See Buildings Fall Like Lightning dir Clio Barnard (Cannes winner, Curzon now), The Odyssey dir Nolan (Jul 17), My Fathers Island/Curzon (Jul 3), The Girls/BFI (Jul 10), Rosebush Pruning/MUBI (Jul 10).',
+    tv:'Half Man by Richard Gadd (BBC iPlayer and HBO, now), Falling by Jack Thorne (Channel 4, now), Dirty Business docudrama (Channel 4), The Night Manager Series 2 (BBC iPlayer), Babies by Stefan Golaszewski (BBC iPlayer).'
+  };
+  return 'Return a JSON array of exactly 5 UK '+type+' events for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
-  +'Only include these types: '+types+'\n\n'
-  +'Art options: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain, Project a Black Planet/Barbican.\n'
-  +'Theatre options: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird West End, Midsummer Night Dream/Regents Park.\n'
-  +'Film options: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan Jul 17, My Fathers Island/Curzon, The Girls/BFI, Rosebush Pruning/MUBI.\n'
-  +'TV options: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC.\n\n'
-  +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array max 3), summary(1 sentence for their taste), press(short string), matchScore(0-100), matchReason(one short sentence), artfundUrl(or null), bookingUrl(or null).';
+  +'Choose from: '+options[type]+'\n\n'
+  +'Each item must have: title, type("'+type+'"), venue, location, dates, tags(array max 3), summary(1 sentence written for their taste), press(short string), matchScore(integer 0-100), matchReason(one short sentence), artfundUrl(string or null), bookingUrl(string or null).\n'
+  +'Return ONLY the JSON array, no other text.';
 }
 
 function callAPI(prompt, callback){
@@ -311,17 +314,17 @@ function callAPI(prompt, callback){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:3500,
-      system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks. Start with [ end with ].',
+      max_tokens:2000,
+      system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks. Start with [ and end with ].',
       messages:[{role:'user',content:prompt}]
     })
   })
   .then(function(r){clearTimeout(timer);return r.json().then(function(d){return{ok:r.ok,data:d};});})
   .then(function(res){
-    if(!res.ok){callback(new Error('HTTP '+(res.data&&res.data.error&&res.data.error.message||res.status)),null);return;}
+    if(!res.ok){callback(new Error('HTTP '+((res.data&&res.data.error&&res.data.error.message)||res.status)),null);return;}
     var text=(res.data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     text=text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
-    if(!text||text[0]!=='['){callback(new Error('Unexpected response: '+text.substring(0,60)),null);return;}
+    if(!text||text[0]!=='['){callback(new Error('Unexpected: '+text.substring(0,60)),null);return;}
     try{callback(null,JSON.parse(text));}
     catch(e){callback(new Error('Parse error: '+e.message),null);}
   })
@@ -331,29 +334,40 @@ function callAPI(prompt, callback){
 function findEvents(forceRefresh){
   if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs);updateCacheInfo();return;}
   setBusy(true);
-  setStatus('Finding events — step 1 of 2...');
-  setProg(10);
+  setProg(5);
   el('recs-empty').style.display='none';
   var prefs=getPrefs();
+  var results=[];
+  var types=['art','theatre','film','tv'];
+  var labels={art:'Art',theatre:'Theatre',film:'Film',tv:'TV'};
+  var step=0;
 
-  // First call: art and theatre
-  callAPI(buildPrompt(prefs,'art and theatre'),function(err1,batch1){
-    if(err1){setProg(null);setBusy(false);setStatus('Error: '+err1.message,'err');return;}
-    setStatus('Finding events — step 2 of 2...');
-    setProg(55);
-
-    // Second call: film and tv
-    callAPI(buildPrompt(prefs,'film and tv'),function(err2,batch2){
+  function nextCall(){
+    if(step>=types.length){
       setProg(null);setBusy(false);
-      if(err2){setStatus('Error: '+err2.message,'err');return;}
-      var events=(batch1||[]).concat(batch2||[]);
-      if(!events.length){setStatus('No events returned','err');return;}
-      S.recs=events;S.cachedAt=Date.now();persist();
-      renderRecs(events);updateCacheInfo();updateCounts(events);
-      setStatus('Loaded '+events.length+' events — cached for 24 hours','ok');
+      if(!results.length){setStatus('No events returned','err');return;}
+      S.recs=results;S.cachedAt=Date.now();persist();
+      renderRecs(results);updateCacheInfo();updateCounts(results);
+      setStatus('Loaded '+results.length+' events — cached for 24 hours','ok');
       setTimeout(function(){setStatus('');},6000);
+      return;
+    }
+    var type=types[step];
+    setStatus('Finding '+labels[type]+' events ('+( step+1)+' of 4)...');
+    setProg(5+(step*23));
+    callAPI(buildPrompt(prefs,type),function(err,batch){
+      if(err){
+        // Don't fail completely — just skip this category
+        console.warn('Error fetching '+type+':',err.message);
+      } else {
+        results=results.concat(batch||[]);
+      }
+      step++;
+      nextCall();
     });
-  });
+  }
+
+  nextCall();
 }
 
 var TC={art:'#b05030',theatre:'#6030a0',film:'#1060a0',tv:'#108050'};
