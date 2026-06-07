@@ -1,9 +1,5 @@
-[build]
+toml[build]
   functions = "netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
-  included_files = []
-
-[functions.claude]
-  timeout = 26
