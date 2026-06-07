@@ -294,7 +294,7 @@ function setProg(p){if(p===null){el('prog').style.display='none';return;}el('pro
 function buildPrompt(prefs){
   return 'Find 20 UK cultural events (art, theatre, film, tv) for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
-  +'Aim for roughly 6 art, 5 theatre, 5 film, 4 tv.\n\n'
+  +'You MUST return exactly 20 events: 6 art, 5 theatre, 5 film, 4 tv. Include all categories, especially TV.\n\n'
   +'Verified events:\n'
   +'ART: Tracey Emin/Tate Modern until Aug 2026 (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), '
   +'Hepworth in Colour/Courtauld 12Jun-6Sep (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), '
@@ -326,7 +326,7 @@ function findEvents(forceRefresh){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:3500,
+      max_tokens:4096,
       system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
       messages:[{role:'user',content:buildPrompt(prefs)}]
     })
