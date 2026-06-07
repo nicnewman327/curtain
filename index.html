@@ -292,21 +292,14 @@ function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-b
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
 function buildPrompt(prefs){
-  return 'Find 20 UK cultural events (art, theatre, film, tv) for June-September 2026.\n'
+  return 'Return a JSON array of exactly 20 UK cultural events for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
-  +'You MUST return exactly 20 events: 6 art, 5 theatre, 5 film, 4 tv. Include all categories, especially TV.\n\n'
-  +'Verified events:\n'
-  +'ART: Tracey Emin/Tate Modern until Aug 2026 (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), '
-  +'Hepworth in Colour/Courtauld 12Jun-6Sep (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), '
-  +'Ana Mendieta/Tate Modern from 9Jul (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), '
-  +'Frida Kahlo/Tate Modern from 25Jun (artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), '
-  +'Project a Black Planet/Barbican 11Jun-6Sep, Hurvin Anderson/Tate Britain until 23Aug, Whistler/Tate Britain until 27Sep.\n'
-  +'THEATRE: Glengarry Glen Ross/Old Vic until 18Jul, Arcadia/Duke of Yorks 20Jun-12Sep, To Kill a Mockingbird West End from 25Jun, Midsummer Nights Dream/Regents Park Open Air 20Jun-18Jul.\n'
-  +'FILM: I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now), The Odyssey dir Nolan 17Jul, My Fathers Island Curzon 3Jul, The Girls BFI 10Jul, Rosebush Pruning MUBI 10Jul.\n'
-  +'TV: Half Man/Richard Gadd BBC+HBO now, Falling/Jack Thorne Channel 4, Dirty Business Channel 4, Night Manager S2 BBC, Babies BBC.\n\n'
-  +'Return ONLY a raw JSON array. No markdown, no backticks, start [ end ]. '
-  +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array max 4), summary(2 sentences for their taste), press(string), matchScore(integer 0-100), matchReason(one sentence), artfundUrl(string or null), bookingUrl(string or null). '
-  +'Sort by matchScore descending within each type.';
+  +'Include exactly: 6 art, 5 theatre, 5 film, 4 tv.\n\n'
+  +'Art: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain, Barbican Black Planet.\n'
+  +'Theatre: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird, Midsummer Night Dream/Regents Park.\n'
+  +'Film: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan, My Fathers Island/Curzon, The Girls/BFI, Rosebush Pruning/MUBI.\n'
+  +'TV: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC.\n\n'
+  +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array max 3), summary(1 sentence), press(short string), matchScore(0-100), matchReason(short), artfundUrl(or null), bookingUrl(or null).';
 }
 
 function findEvents(forceRefresh){
