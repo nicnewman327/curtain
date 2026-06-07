@@ -292,7 +292,7 @@ function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-b
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
 function buildPrompt(prefs){
-  return 'Find 20 UK cultural events (art, theatre, film, tv) for June-September 2026.\n'
+  return 'Find 10 UK cultural events (art, theatre, film, tv) for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
   +'Aim for roughly 6 art, 5 theatre, 5 film, 4 tv.\n\n'
   +'Verified events:\n'
@@ -326,7 +326,7 @@ function findEvents(forceRefresh){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:4000,
+      max_tokens:1500,
       system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
       messages:[{role:'user',content:buildPrompt(prefs)}]
     })
