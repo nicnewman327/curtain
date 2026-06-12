@@ -8,7 +8,7 @@ exports.handler = async function(event) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY environment variable is not set' })
+      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' })
     };
   }
 
@@ -19,7 +19,7 @@ exports.handler = async function(event) {
     return {
       statusCode: 400,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Invalid JSON in request body' })
+      body: JSON.stringify({ error: 'Invalid JSON' })
     };
   }
 
@@ -33,7 +33,7 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         model: body.model || 'claude-sonnet-4-6',
-        max_tokens: body.max_tokens || 4000,
+        max_tokens: body.max_tokens || 1200,
         system: body.system || '',
         messages: body.messages || []
       })
@@ -41,19 +41,25 @@ exports.handler = async function(event) {
 
     const data = await response.json();
 
+    // Check if response was cut off
+    if (data.stop_reason === 'max_tokens') {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ error: 'Response cut off — max_tokens too low. Used: ' + data.usage.output_tokens })
+      };
+    }
+
     return {
       statusCode: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(data)
     };
   } catch(e) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Function error: ' + e.message })
+      body: JSON.stringify({ error: e.message })
     };
   }
 };
