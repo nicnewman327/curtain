@@ -26,35 +26,29 @@
   --red:#c45050;--red-bg:#2a0e0e;
 }}
 body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;min-height:100vh}
-
-/* ── Top nav ── */
 .topnav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
-.topnav-inner{display:flex;align-items:center;gap:0;padding:0 1rem;overflow-x:auto;scrollbar-width:none}
+.topnav-inner{display:flex;align-items:center;padding:0 1rem;overflow-x:auto;scrollbar-width:none}
 .topnav-inner::-webkit-scrollbar{display:none}
-.logo{font-size:16px;font-weight:700;letter-spacing:-.03em;padding:0.9rem 1rem 0.9rem 0;margin-right:0.5rem;border-right:1px solid var(--border);white-space:nowrap;display:flex;align-items:center;gap:8px;flex-shrink:0}
-.logo-sq{width:24px;height:24px;background:var(--text);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-sq svg{width:12px;height:12px;fill:var(--bg)}
-.nav-tabs{display:flex;align-items:center;gap:0;flex:1}
-.ntab{padding:0.9rem 1rem;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .12s;flex-shrink:0}
+.logo{font-size:16px;font-weight:700;letter-spacing:-.03em;padding:.85rem 1rem .85rem 0;margin-right:.5rem;border-right:1px solid var(--border);white-space:nowrap;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.logo-sq{width:22px;height:22px;background:var(--text);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-sq svg{width:11px;height:11px;fill:var(--bg)}
+.nav-tabs{display:flex;align-items:center;flex:1}
+.ntab{padding:.85rem .9rem;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .12s;flex-shrink:0}
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
-.ntab .ct{display:inline-block;background:var(--bg3);border-radius:99px;font-size:10px;padding:1px 6px;margin-left:4px;font-weight:normal}
-.nav-right{display:flex;align-items:center;gap:8px;padding-left:1rem;margin-left:auto;flex-shrink:0}
-.btn-pri{font-size:13px;padding:7px 16px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700;transition:opacity .15s;white-space:nowrap}
+.ntab .ct{display:inline-block;background:var(--bg3);border-radius:99px;font-size:10px;padding:1px 5px;margin-left:3px;font-weight:normal}
+.nav-right{display:flex;align-items:center;gap:8px;padding-left:.75rem;margin-left:auto;flex-shrink:0}
+.btn-pri{font-size:13px;padding:7px 15px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700;transition:opacity .15s;white-space:nowrap}
 .btn-pri:hover{opacity:.82}
 .btn-pri:disabled{opacity:.35;cursor:default}
-.btn-sec{font-size:12px;padding:6px 12px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap}
-.btn-sec:hover{background:var(--bg2)}
-
-/* ── Cache info bar ── */
-.infobar{display:flex;align-items:center;gap:10px;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:12px;color:var(--text3);background:var(--bg)}
+.btn-sec{font-size:12px;padding:6px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap}
+.btn-sec:hover{background:var(--bg3)}
+.infobar{display:none;align-items:center;gap:10px;padding:.5rem 1.5rem;border-bottom:1px solid var(--border);font-size:12px;color:var(--text3)}
+.infobar.show{display:flex}
 .infobar.fresh{color:var(--green)}
 .infobar.stale{color:var(--amber)}
-
-/* ── Main layout ── */
-.main{max-width:900px;margin:0 auto;padding:1.5rem}
-
-/* ── Status ── */
+.main{max-width:880px;margin:0 auto;padding:1.5rem}
+@media(max-width:600px){.main{padding:1rem}.nav-right .btn-sec{display:none}}
 .status-bar{display:none;align-items:center;gap:9px;font-size:13px;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);margin-bottom:14px}
 .status-bar.show{display:flex}
 .status-bar.ok{color:var(--green);border-color:var(--green-bg);background:var(--green-bg)}
@@ -64,16 +58,10 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 @keyframes spin{to{transform:rotate(360deg)}}
 .prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:14px}
 .prog-fill{height:100%;background:var(--green);border-radius:99px;width:0%;transition:width .5s}
-
-/* ── Panels ── */
 .panel{display:none}
 .panel.active{display:block}
-
-/* ── Section headers ── */
-.section-hdr{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px}
+.section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px}
 .section-hdr:first-child{margin-top:0}
-
-/* ── Event cards ── */
 .cards{display:flex;flex-direction:column;gap:12px}
 .ecard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;background:var(--bg);transition:border-color .12s}
 .ecard:hover{border-color:var(--border2)}
@@ -90,65 +78,51 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .eaf{font-size:12px;margin-top:6px}
 .eaf a{color:var(--green);text-decoration:none}
 .eaf a:hover{text-decoration:underline}
-.score-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:64px}
-.score-n{font-size:26px;font-weight:700;line-height:1}
-.score-sm{font-size:12px;font-weight:normal;color:var(--text3)}
+.score-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:60px}
+.score-n{font-size:24px;font-weight:700;line-height:1}
+.score-sm{font-size:11px;font-weight:normal;color:var(--text3)}
 .score-l{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
-.btn-save{font-size:12px;padding:5px 12px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
+.btn-save{font-size:12px;padding:5px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
 .btn-save:hover{background:var(--bg2)}
 .btn-save.saved{color:var(--green);border-color:var(--green)}
 .book-link{font-size:12px;color:var(--text3);text-decoration:none;display:block;text-align:right}
 .book-link:hover{color:var(--text)}
-.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;margin-left:6px;vertical-align:middle}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;vertical-align:middle}
 .badge-top{background:var(--amber-bg);color:var(--amber)}
 .badge-hi{background:var(--blue-bg);color:var(--blue)}
-
-/* ── Diary ── */
-.dcard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:12px}
-.dcard.manual{border-style:dashed}
+/* Diary */
+.dcard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:12px;background:var(--bg)}
+.dcard.manual{border-color:var(--border2);border-style:dashed}
+.dsummary{font-size:13px;color:var(--text2);margin-top:7px;line-height:1.55;font-style:italic}
 .stars{display:flex;gap:5px;margin-top:8px}
 .star{font-size:20px;cursor:pointer;color:var(--border2);line-height:1;user-select:none;transition:color .1s}
 .star.lit,.star:hover{color:#c8912a}
-.dnote{font-size:13px;margin-top:10px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;width:100%;resize:none;min-height:50px}
-
-/* ── Add to diary form ── */
-.add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:20px;background:var(--bg2)}
-.add-form h3{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)}
+.dnote{font-size:13px;margin-top:8px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;width:100%;resize:none;min-height:46px}
+/* Add form */
+.add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:4px;background:var(--bg2)}
+.add-form h3{font-size:14px;font-weight:700;margin-bottom:12px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.single{grid-template-columns:1fr}
-.form-group{display:flex;flex-direction:column;gap:4px}
-.form-group label{font-size:12px;color:var(--text2);font-family:var(--font-sans,sans-serif)}
-.form-group input,.form-group select,.form-group textarea{font-size:13px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;width:100%}
-.form-group select{cursor:pointer}
-.form-group textarea{resize:vertical;min-height:60px}
 @media(max-width:500px){.form-row{grid-template-columns:1fr}}
-
-/* ── Prefs ── */
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:12px;color:var(--text2);font-family:sans-serif}
+.fg input,.fg select,.fg textarea{font-size:13px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;width:100%}
+.fg textarea{resize:vertical;min-height:60px}
+/* Prefs */
 .prefs-grid{display:flex;flex-direction:column;gap:16px;max-width:640px}
 .pg{display:flex;flex-direction:column;gap:6px}
 .pl{font-size:14px;font-weight:700}
 .ph{font-size:12px;color:var(--text3)}
 textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-family:Georgia,serif;resize:vertical;min-height:80px;width:100%}
-textarea.pi:focus{outline:none;border-color:var(--text2)}
-
-/* ── Empty ── */
+/* Empty */
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
 .empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:14px;line-height:1.6}
-
-/* ── Mobile ── */
-@media(max-width:600px){
-  .main{padding:1rem}
-  .etitle{font-size:15px}
-  .score-n{font-size:20px}
-  .egrid{gap:8px}
-  .nav-right .btn-sec{display:none}
-}
+.sync-status{font-size:11px;color:var(--text3);font-style:italic;margin-top:4px;font-family:sans-serif}
 </style>
 </head>
 <body>
 
-<!-- Top navigation -->
 <nav class="topnav">
   <div class="topnav-inner">
     <div class="logo">
@@ -171,35 +145,31 @@ textarea.pi:focus{outline:none;border-color:var(--text2)}
   </div>
 </nav>
 
-<div class="infobar" id="infobar" style="display:none"></div>
+<div class="infobar" id="infobar"></div>
 
 <div class="main">
-
-  <!-- Status -->
   <div class="status-bar" id="status-bar"><div class="spinner" id="status-spin"></div><span id="status-txt"></span></div>
   <div class="prog" id="prog"><div class="prog-fill" id="prog-fill"></div></div>
 
-  <!-- Discover panel -->
+  <!-- Discover -->
   <div class="panel active" id="panel-discover">
     <div class="cards" id="recs-list"></div>
     <div class="empty" id="recs-empty">
       <div class="empty-icon">&#9675;</div>
-      <p>Press <strong>Find events</strong> to get matched recommendations across art, theatre, film and TV.<br><br>Results cache for 24 hours.</p>
+      <p>Press <strong>Find events</strong> to get matched recommendations.<br><br>Results cache for 24 hours.</p>
     </div>
   </div>
 
-  <!-- Diary panel -->
+  <!-- Diary -->
   <div class="panel" id="panel-diary">
-
-    <!-- Add manually form -->
     <div class="add-form">
-      <h3>&#43; Add an event to my diary</h3>
+      <h3>&#43; Add to diary</h3>
       <div class="form-row">
-        <div class="form-group">
+        <div class="fg">
           <label>Title</label>
           <input type="text" id="add-title" placeholder="e.g. Hamlet at the National Theatre">
         </div>
-        <div class="form-group">
+        <div class="fg">
           <label>Category</label>
           <select id="add-type">
             <option value="art">Art</option>
@@ -210,43 +180,44 @@ textarea.pi:focus{outline:none;border-color:var(--text2)}
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="fg">
           <label>Venue</label>
           <input type="text" id="add-venue" placeholder="e.g. National Theatre, London">
         </div>
-        <div class="form-group">
+        <div class="fg">
           <label>Dates</label>
           <input type="text" id="add-dates" placeholder="e.g. 14 Jun – 30 Aug 2026">
         </div>
       </div>
       <div class="form-row single">
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea id="add-notes" placeholder="Why you want to see it, how to get tickets, anything else..."></textarea>
+        <div class="fg">
+          <label>Notes <span style="color:var(--text3)">(leave blank and we'll write a description)</span></label>
+          <textarea id="add-notes" placeholder="Optional — why you want to see it, how to get tickets..."></textarea>
         </div>
       </div>
-      <button class="btn-pri" onclick="addManual()" style="margin-top:4px">Add to diary</button>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+        <button class="btn-pri" id="add-btn" onclick="addManual()">Add to diary</button>
+        <div class="sync-status" id="add-status"></div>
+      </div>
     </div>
 
-    <!-- Saved from recommendations -->
-    <div id="diary-saved-section">
+    <div id="diary-saved-section" style="display:none">
       <div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>
       <div id="diary-saved"></div>
     </div>
 
-    <!-- Manually added -->
-    <div id="diary-manual-section">
+    <div id="diary-manual-section" style="display:none">
       <div class="section-hdr" style="color:var(--blue)">Planning to see</div>
       <div id="diary-manual"></div>
     </div>
 
-    <div class="empty" id="diary-empty" style="display:none">
+    <div class="empty" id="diary-empty">
       <div class="empty-icon">&#9645;</div>
-      <p>Save events from recommendations or add your own above.</p>
+      <p>Save events from recommendations or add your own above.<br><br>Your diary syncs across all your devices.</p>
     </div>
   </div>
 
-  <!-- Prefs panel -->
+  <!-- Prefs -->
   <div class="panel" id="panel-prefs">
     <div class="prefs-grid">
       <div class="pg">
@@ -260,108 +231,139 @@ textarea.pi:focus{outline:none;border-color:var(--text2)}
       </div>
       <div class="pg">
         <div class="pl">Things I've loved recently</div>
-        <div class="ph">Films, shows, exhibitions, plays — these calibrate match scores</div>
+        <div class="ph">Films, shows, exhibitions, plays</div>
         <textarea class="pi" id="pref-loved">Succession, All of Us Strangers, The Zone of Interest, The Lehman Trilogy, Tracey Emin at Tate Modern</textarea>
       </div>
       <div style="display:flex;gap:10px;align-items:center">
         <button class="btn-pri" onclick="savePrefs()">Save preferences</button>
-        <span id="prefs-ok" style="font-size:13px;color:var(--green);display:none">&#10003; Saved — cache cleared</span>
+        <span id="prefs-ok" style="font-size:13px;color:var(--green);display:none">&#10003; Saved</span>
       </div>
       <div style="font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:12px">
-        Your API key is stored as an environment variable in Netlify. Saving preferences clears the cache so the next search uses your updated profile.
+        Saving preferences clears the recommendation cache so the next search uses your updated profile.
       </div>
     </div>
   </div>
-
-</div><!-- /main -->
+</div>
 
 <script>
-var SK='curtain_v11';
+var SK='curtain_v12';
 var CACHE_MS=24*60*60*1000;
-var S={prefs:{love:'',dislike:'',loved:''},diary:[],manual:[],recs:[],cachedAt:null};
-try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign({manual:[]},JSON.parse(_d));}catch(e){}
+var S={prefs:{love:'',dislike:'',loved:''},recs:[],cachedAt:null};
+try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign(S,JSON.parse(_d));}catch(e){}
 function persist(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 function el(id){return document.getElementById(id);}
 function esc(s){return String(s||'').split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');}
 
 var currentFilter='all';
-var currentPanel='discover';
+var diaryItems=[];
 
+// ── API call ─────────────────────────────────────────────────────────────────
+function api(body,cb){
+  fetch('/.netlify/functions/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  })
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d};});})
+  .then(function(res){cb(null,res.data);})
+  .catch(function(e){cb(e,null);});
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',function(){
   if(S.prefs.love) el('pref-love').value=S.prefs.love;
   if(S.prefs.dislike) el('pref-dislike').value=S.prefs.dislike;
   if(S.prefs.loved) el('pref-loved').value=S.prefs.loved;
-  updateDiaryBadge();
   if(S.recs&&S.recs.length){
     renderRecs(S.recs,currentFilter);
     updateCacheInfo();
     if(cacheIsStale()) setTimeout(function(){findEvents(false);},1000);
   }
+  loadDiary();
 });
 
-function cacheIsStale(){return !S.cachedAt||(Date.now()-S.cachedAt)>CACHE_MS;}
+// ── Diary sync ────────────────────────────────────────────────────────────────
+function loadDiary(){
+  api({action:'diary_load'},function(err,data){
+    if(err||!Array.isArray(data)) return;
+    diaryItems=data;
+    updateDiaryBadge();
+    if(el('panel-diary').classList.contains('active')) renderDiary();
+  });
+}
 
+function saveDiaryItem(item,cb){
+  api({action:'diary_save',item:item},function(err,data){
+    if(err){if(cb)cb(err,null);return;}
+    var saved=Array.isArray(data)?data[0]:data;
+    if(saved&&saved.id){
+      diaryItems.unshift(saved);
+      updateDiaryBadge();
+    }
+    if(cb)cb(null,saved);
+  });
+}
+
+function updateDiaryItem(id,fields){
+  api({action:'diary_update',id:id,fields:fields},function(){});
+  var item=diaryItems.find(function(d){return d.id===id;});
+  if(item) Object.assign(item,fields);
+}
+
+function deleteDiaryItem(id){
+  api({action:'diary_delete',id:id},function(){});
+  diaryItems=diaryItems.filter(function(d){return d.id!==id;});
+  updateDiaryBadge();
+  renderDiary();
+}
+
+// ── Cache ─────────────────────────────────────────────────────────────────────
+function cacheIsStale(){return !S.cachedAt||(Date.now()-S.cachedAt)>CACHE_MS;}
 function updateCacheInfo(){
   var bar=el('infobar');
-  if(!S.cachedAt){bar.style.display='none';return;}
+  if(!S.cachedAt){bar.className='infobar';return;}
   var age=Date.now()-S.cachedAt;
-  var mins=Math.floor(age/60000);
-  var hrs=Math.floor(mins/60);
+  var mins=Math.floor(age/60000),hrs=Math.floor(mins/60);
   var stale=age>CACHE_MS;
   var ageStr=hrs>0?(hrs+'h '+(mins%60)+'m ago'):(mins+'m ago');
-  bar.style.display='flex';
-  bar.className='infobar '+(stale?'stale':'fresh');
-  bar.textContent=(stale?'&#9888; Stale · ':'&#10003; ')+S.recs.length+' events · updated '+ageStr;
+  bar.className='infobar show '+(stale?'stale':'fresh');
+  bar.textContent=(stale?'⚠ Stale · ':' ✓ ')+S.recs.length+' events · updated '+ageStr;
   el('refresh-btn').style.display='inline-block';
 }
 
-// ── Navigation ──────────────────────────────────────────────────────────────
+// ── Navigation ────────────────────────────────────────────────────────────────
 function showPanel(id){
-  ['discover','diary','prefs'].forEach(function(p){
-    el('panel-'+p).classList.toggle('active',p===id);
-  });
+  ['discover','diary','prefs'].forEach(function(p){el('panel-'+p).classList.toggle('active',p===id);});
   ['all','art','theatre','film','tv','diary','prefs'].forEach(function(t){
-    var tab=el('ntab-'+t);
-    if(tab) tab.classList.remove('active');
+    var tab=el('ntab-'+t);if(tab)tab.classList.remove('active');
   });
-  currentPanel=id;
-  if(id==='diary'){
-    el('ntab-diary').classList.add('active');
-    renderDiary();
-  } else if(id==='prefs'){
-    el('ntab-prefs').classList.add('active');
-  } else {
-    el('ntab-'+currentFilter).classList.add('active');
-  }
+  if(id==='diary'){el('ntab-diary').classList.add('active');renderDiary();}
+  else if(id==='prefs'){el('ntab-prefs').classList.add('active');}
 }
 
 function setFilter(type){
   currentFilter=type;
   ['all','art','theatre','film','tv'].forEach(function(t){
-    var tab=el('ntab-'+t);
-    if(tab) tab.classList.toggle('active',t===type);
+    var tab=el('ntab-'+t);if(tab)tab.classList.toggle('active',t===type);
   });
   el('ntab-diary').classList.remove('active');
   el('ntab-prefs').classList.remove('active');
-  ['discover','diary','prefs'].forEach(function(p){
-    el('panel-'+p).classList.toggle('active',p==='discover');
-  });
-  currentPanel='discover';
+  ['discover','diary','prefs'].forEach(function(p){el('panel-'+p).classList.toggle('active',p==='discover');});
   renderRecs(S.recs,type);
 }
 
-// ── Prefs ───────────────────────────────────────────────────────────────────
+// ── Prefs ─────────────────────────────────────────────────────────────────────
 function getPrefs(){return{love:el('pref-love').value,dislike:el('pref-dislike').value,loved:el('pref-loved').value};}
 function savePrefs(){
   S.prefs=getPrefs();S.cachedAt=null;persist();
-  el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2500);
+  el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2000);
 }
 function getDiaryCtx(){
-  var r=S.diary.filter(function(d){return d.rating>0;});
+  var r=diaryItems.filter(function(d){return d.rating>0;});
   return r.length?'\nDiary ratings: '+r.map(function(d){return d.title+' ('+d.rating+'/5)';}).join(', '):'';
 }
 
-// ── Status ──────────────────────────────────────────────────────────────────
+// ── Status ────────────────────────────────────────────────────────────────────
 function setStatus(msg,type){
   var bar=el('status-bar'),spin=el('status-spin'),txt=el('status-txt');
   if(!msg){bar.className='status-bar';return;}
@@ -372,8 +374,8 @@ function setStatus(msg,type){
 function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
-// ── API ──────────────────────────────────────────────────────────────────────
-function callAPI(type,prefs,callback){
+// ── Find events ───────────────────────────────────────────────────────────────
+function callClaude(type,prefs,cb){
   var options={
     'art and theatre':'Art: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain. Theatre: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird/West End, Midsummer Nights Dream/Regents Park.',
     'film and tv':'Film: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan Jul 17, My Fathers Island/Curzon Jul 3, The Girls/BFI, Rosebush Pruning/MUBI. TV: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC, Babies/BBC.'
@@ -383,65 +385,52 @@ function callAPI(type,prefs,callback){
     +'Choose from: '+options[type]+'\n'
     +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array 2), summary(one sentence), press(few words), matchScore(0-100), matchReason(few words), artfundUrl(null), bookingUrl(null).\n'
     +'Return ONLY the JSON array.';
-  fetch('/.netlify/functions/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-6',
-      max_tokens:1500,
-      system:'Return ONLY a valid JSON array. No markdown. Start with [ end with ].',
-      messages:[{role:'user',content:prompt}]
-    })
-  })
-  .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d};});})
-  .then(function(res){
-    if(!res.ok){callback(new Error('HTTP error'),null);return;}
-    if(res.data.error){callback(new Error(res.data.error),null);return;}
-    var text=(res.data.content||[]).map(function(b){return b.text||'';}).join('').trim();
+  api({
+    model:'claude-sonnet-4-6',max_tokens:1500,
+    system:'Return ONLY a valid JSON array. No markdown. Start with [ end with ].',
+    messages:[{role:'user',content:prompt}]
+  },function(err,data){
+    if(err){cb(err,null);return;}
+    if(data&&data.error){cb(new Error(data.error),null);return;}
+    var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     text=text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
-    try{callback(null,JSON.parse(text));}
-    catch(e){callback(new Error('Parse: '+e.message),null);}
-  })
-  .catch(function(e){callback(e,null);});
+    try{cb(null,JSON.parse(text));}
+    catch(e){cb(new Error('Parse error'),null);}
+  });
 }
 
 function findEvents(forceRefresh){
   if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs,currentFilter);updateCacheInfo();return;}
-  setBusy(true);setProg(10);
-  el('recs-empty').style.display='none';
+  setBusy(true);setProg(10);el('recs-empty').style.display='none';
   var prefs=getPrefs();
   setStatus('Finding art and theatre events...');
-  callAPI('art and theatre',prefs,function(err1,batch1){
+  callClaude('art and theatre',prefs,function(err1,batch1){
     if(err1){setProg(null);setBusy(false);setStatus('Error: '+err1.message,'err');return;}
-    setProg(55);
-    setStatus('Finding film and TV events...');
-    callAPI('film and tv',prefs,function(err2,batch2){
+    setProg(55);setStatus('Finding film and TV events...');
+    callClaude('film and tv',prefs,function(err2,batch2){
       setProg(null);setBusy(false);
       if(err2){setStatus('Error: '+err2.message,'err');return;}
       var events=(batch1||[]).concat(batch2||[]);
       S.recs=events;S.cachedAt=Date.now();persist();
-      renderRecs(events,currentFilter);
-      updateCacheInfo();
-      updateCounts(events);
+      renderRecs(events,currentFilter);updateCacheInfo();updateCounts(events);
       setStatus('Loaded '+events.length+' events — cached for 24 hours','ok');
       setTimeout(function(){setStatus('');},5000);
     });
   });
 }
 
-// ── Counts ──────────────────────────────────────────────────────────────────
+// ── Counts ────────────────────────────────────────────────────────────────────
 function updateCounts(recs){
-  var c={art:0,theatre:0,film:0,tv:0};
+  var c={art:0,theatre:0,film:0,tv:0},total=0;
   (recs||[]).forEach(function(e){if(c[e.type]!==undefined)c[e.type]++;});
-  var total=0;
-  Object.keys(c).forEach(function(t){
-    total+=c[t];
-    var e2=el('ct-'+t);if(e2)e2.textContent=c[t]||'';
-  });
+  Object.keys(c).forEach(function(t){total+=c[t];var e2=el('ct-'+t);if(e2)e2.textContent=c[t]||'';});
   var all=el('ct-all');if(all)all.textContent=total||'';
 }
+function updateDiaryBadge(){
+  var ct=el('ct-diary');if(ct)ct.textContent=diaryItems.length||'';
+}
 
-// ── Render recs ──────────────────────────────────────────────────────────────
+// ── Render recs ───────────────────────────────────────────────────────────────
 var TC={art:'#b05030',theatre:'#6030a0',film:'#1060a0',tv:'#108050'};
 var TBG={art:'#fef0ea',theatre:'#f3eef9',film:'#e8f0fa',tv:'#eafaf2'};
 var TL={art:'Art exhibitions',theatre:'Theatre',film:'Film',tv:'TV & streaming'};
@@ -457,12 +446,10 @@ function renderRecs(recs,filter){
   list.innerHTML='';
   if(!recs||!recs.length){empty.style.display='block';return;}
   var filtered=filter&&filter!=='all'?recs.filter(function(e){return e.type===filter;}):recs;
-  if(!filtered.length){empty.style.display='block';empty.querySelector('p').textContent='No events in this category yet.';return;}
+  if(!filtered.length){empty.style.display='block';empty.querySelector('p').textContent='No events in this category yet — press Find events.';return;}
   empty.style.display='none';
   updateCounts(recs);
-
   if(!filter||filter==='all'){
-    // Group by type
     var groups={art:[],theatre:[],film:[],tv:[]};
     filtered.forEach(function(e){if(groups[e.type])groups[e.type].push(e);});
     ['art','theatre','film','tv'].forEach(function(type){
@@ -479,7 +466,7 @@ function renderRecs(recs,filter){
 }
 
 function makeCard(ev,i){
-  var inD=S.diary.some(function(d){return d.title===ev.title;});
+  var inD=diaryItems.some(function(d){return d.title===ev.title;});
   var type=ev.type||'art';
   var badge=i===0?'<span class="badge badge-top">Top pick</span>':((ev.matchScore||0)>=87?'<span class="badge badge-hi">Strong match</span>':'');
   var card=document.createElement('div');card.className='ecard';
@@ -499,108 +486,105 @@ function makeCard(ev,i){
     +(ev.bookingUrl?'<a class="book-link" href="'+esc(ev.bookingUrl)+'" target="_blank">Book &rarr;</a>':'')
     +'</div></div>';
   card.querySelector('.btn-save').addEventListener('click',function(){
-    if(!S.diary.some(function(d){return d.title===ev.title;})){
-      S.diary.unshift({title:ev.title,type:ev.type||'',dates:ev.dates||'',venue:ev.venue||'',rating:0,note:'',savedAt:new Date().toISOString(),source:'rec'});
-      persist();updateDiaryBadge();
-    }
-    this.innerHTML='&#10003; Saved';this.classList.add('saved');
+    var btn=this;
+    if(inD) return;
+    btn.textContent='Saving...';btn.disabled=true;
+    saveDiaryItem({
+      title:ev.title,type:ev.type,venue:ev.venue||'',dates:ev.dates||'',
+      summary:ev.summary||'',press:ev.press||'',matchReason:ev.matchReason||'',
+      note:'',rating:0,source:'rec'
+    },function(){
+      btn.innerHTML='&#10003; Saved';btn.classList.add('saved');btn.disabled=false;
+      inD=true;
+    });
   });
   return card;
 }
 
-// ── Diary ────────────────────────────────────────────────────────────────────
-function addManual(){
-  var title=el('add-title').value.trim();
-  if(!title){el('add-title').focus();return;}
-  var item={
-    title:title,
-    type:el('add-type').value,
-    venue:el('add-venue').value.trim(),
-    dates:el('add-dates').value.trim(),
-    note:el('add-notes').value.trim(),
-    rating:0,
-    savedAt:new Date().toISOString(),
-    source:'manual'
-  };
-  S.manual.unshift(item);
-  persist();
-  el('add-title').value='';el('add-venue').value='';el('add-dates').value='';el('add-notes').value='';
-  renderDiary();
-  updateDiaryBadge();
-}
-
+// ── Diary render ──────────────────────────────────────────────────────────────
 function renderDiary(){
-  var savedEl=el('diary-saved');
-  var manualEl=el('diary-manual');
-  var savedSec=el('diary-saved-section');
-  var manualSec=el('diary-manual-section');
+  var savedEl=el('diary-saved'),manualEl=el('diary-manual');
+  var savedSec=el('diary-saved-section'),manualSec=el('diary-manual-section');
   var empty=el('diary-empty');
-
-  savedEl.innerHTML='';
-  manualEl.innerHTML='';
-
-  if(!S.diary.length) savedSec.style.display='none';
-  else {
-    savedSec.style.display='block';
-    S.diary.forEach(function(item,idx){
-      savedEl.appendChild(makeDiaryCard(item,idx,'saved'));
-    });
-  }
-
-  if(!S.manual.length) manualSec.style.display='none';
-  else {
-    manualSec.style.display='block';
-    S.manual.forEach(function(item,idx){
-      manualEl.appendChild(makeDiaryCard(item,idx,'manual'));
-    });
-  }
-
-  empty.style.display=(!S.diary.length&&!S.manual.length)?'block':'none';
+  savedEl.innerHTML='';manualEl.innerHTML='';
+  var recs=diaryItems.filter(function(d){return d.source==='rec';});
+  var manual=diaryItems.filter(function(d){return d.source==='manual';});
+  if(!recs.length){savedSec.style.display='none';}
+  else{savedSec.style.display='block';recs.forEach(function(item){savedEl.appendChild(makeDiaryCard(item));});}
+  if(!manual.length){manualSec.style.display='none';}
+  else{manualSec.style.display='block';manual.forEach(function(item){manualEl.appendChild(makeDiaryCard(item));});}
+  empty.style.display=(!recs.length&&!manual.length)?'block':'none';
 }
 
-function makeDiaryCard(item,idx,source){
+function makeDiaryCard(item){
   var c=document.createElement('div');
-  c.className='dcard'+(source==='manual'?' manual':'');
+  c.className='dcard'+(item.source==='manual'?' manual':'');
   var tc=TC[item.type]||'#888';
-  var stars=[1,2,3,4,5].map(function(n){
-    return'<span class="star'+(item.rating>=n?' lit':'')+'" data-idx="'+idx+'" data-src="'+source+'" data-n="'+n+'">&#9733;</span>';
-  }).join('');
+  var stars=[1,2,3,4,5].map(function(n){return'<span class="star'+(item.rating>=n?' lit':'')+'" data-id="'+item.id+'" data-n="'+n+'">&#9733;</span>';}).join('');
+  // Show summary from recommendation if available
+  var summaryHtml=item.summary?'<div class="dsummary">'+esc(item.summary)+'</div>':'';
   c.innerHTML='<div style="display:flex;justify-content:space-between;align-items:start;gap:12px"><div style="flex:1">'
     +'<div style="font-size:16px;font-weight:700">'+esc(item.title)+'</div>'
-    +'<div style="font-size:12px;color:'+tc+';margin-top:3px">'
-    +esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
+    +'<div style="font-size:12px;color:'+tc+';margin-top:3px">'+esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
+    +summaryHtml
     +'<div class="stars">'+stars+'</div>'
-    +'<textarea class="dnote" rows="2" placeholder="Notes..." data-idx="'+idx+'" data-src="'+source+'">'+esc(item.note||'')+'</textarea>'
+    +'<textarea class="dnote" placeholder="Your notes..." data-id="'+item.id+'">'+esc(item.note||'')+'</textarea>'
     +'</div>'
-    +'<button class="rem-btn" data-idx="'+idx+'" data-src="'+source+'" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px">&#10005;</button>'
+    +'<button class="rem-btn" data-id="'+item.id+'" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px">&#10005;</button>'
     +'</div>';
   c.querySelectorAll('.star').forEach(function(s){
     s.addEventListener('click',function(){
-      var i=+this.dataset.idx,n=+this.dataset.n,src=this.dataset.src;
-      if(src==='manual') S.manual[i].rating=n;
-      else S.diary[i].rating=n;
-      persist();renderDiary();
+      var id=this.dataset.id,n=+this.dataset.n;
+      updateDiaryItem(id,{rating:n});
+      renderDiary();
     });
   });
   c.querySelector('.dnote').addEventListener('change',function(){
-    var i=+this.dataset.idx,src=this.dataset.src;
-    if(src==='manual') S.manual[i].note=this.value;
-    else S.diary[i].note=this.value;
-    persist();
+    updateDiaryItem(this.dataset.id,{note:this.value});
   });
   c.querySelector('.rem-btn').addEventListener('click',function(){
-    var i=+this.dataset.idx,src=this.dataset.src;
-    if(src==='manual') S.manual.splice(i,1);
-    else S.diary.splice(i,1);
-    persist();updateDiaryBadge();renderDiary();
+    deleteDiaryItem(this.dataset.id);
   });
   return c;
 }
 
-function updateDiaryBadge(){
-  var n=(S.diary.length||0)+(S.manual.length||0);
-  var ct=el('ct-diary');
-  if(ct) ct.textContent=n||'';
+// ── Add manual entry ──────────────────────────────────────────────────────────
+function addManual(){
+  var title=el('add-title').value.trim();
+  if(!title){el('add-title').focus();return;}
+  var notes=el('add-notes').value.trim();
+  var btn=el('add-btn');
+  var status=el('add-status');
+  btn.disabled=true;
+
+  function doSave(note){
+    saveDiaryItem({
+      title:title,
+      type:el('add-type').value,
+      venue:el('add-venue').value.trim(),
+      dates:el('add-dates').value.trim(),
+      note:note,
+      summary:'',press:'',matchReason:'',
+      rating:0,source:'manual'
+    },function(){
+      btn.disabled=false;
+      status.textContent='';
+      el('add-title').value='';el('add-venue').value='';el('add-dates').value='';el('add-notes').value='';
+      renderDiary();
+      showPanel('diary');
+    });
+  }
+
+  if(!notes){
+    // Auto-generate description
+    status.textContent='Writing a description...';
+    api({action:'diary_autofill',title:title,type:el('add-type').value},function(err,data){
+      var desc=(data&&data.description)||'';
+      doSave(desc);
+    });
+  } else {
+    doSave(notes);
+  }
 }
 </script>
 </body>
