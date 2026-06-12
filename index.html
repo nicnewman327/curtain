@@ -43,6 +43,9 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .btn-pri:disabled{opacity:.35;cursor:default}
 .btn-sec{font-size:12px;padding:6px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap}
 .btn-sec:hover{background:var(--bg3)}
+.btn-sm{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
+.btn-sm:hover{background:var(--bg2)}
+.btn-sm.seen{background:var(--green-bg);color:var(--green);border-color:var(--green)}
 .infobar{display:none;align-items:center;gap:10px;padding:.5rem 1.5rem;border-bottom:1px solid var(--border);font-size:12px;color:var(--text3)}
 .infobar.show{display:flex}
 .infobar.fresh{color:var(--green)}
@@ -57,9 +60,13 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:14px}
-.prog-fill{height:100%;background:var(--green);border-radius:99px;width:0%;transition:width .5s}
+.prog-fill{height:100%;background:var(--green);border-radius:99px;width:0%;transition:width .4s}
 .panel{display:none}
 .panel.active{display:block}
+/* Diary tabs */
+.diary-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.dtab{padding:8px 16px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px}
+.dtab.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
 .section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px}
 .section-hdr:first-child{margin-top:0}
 .cards{display:flex;flex-direction:column;gap:12px}
@@ -90,16 +97,19 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;vertical-align:middle}
 .badge-top{background:var(--amber-bg);color:var(--amber)}
 .badge-hi{background:var(--blue-bg);color:var(--blue)}
-/* Diary */
+/* Diary cards */
 .dcard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:12px;background:var(--bg)}
-.dcard.manual{border-color:var(--border2);border-style:dashed}
+.dcard.manual{border-style:dashed}
+.dcard.seen-card{border-color:var(--green);opacity:.85}
 .dsummary{font-size:13px;color:var(--text2);margin-top:7px;line-height:1.55;font-style:italic}
-.stars{display:flex;gap:5px;margin-top:8px}
+.stars{display:flex;gap:4px;margin-top:8px}
 .star{font-size:20px;cursor:pointer;color:var(--border2);line-height:1;user-select:none;transition:color .1s}
 .star.lit,.star:hover{color:#c8912a}
 .dnote{font-size:13px;margin-top:8px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;width:100%;resize:none;min-height:46px}
+.dcard-actions{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.seen-date{font-size:11px;color:var(--green);font-family:sans-serif}
 /* Add form */
-.add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:4px;background:var(--bg2)}
+.add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:16px;background:var(--bg2)}
 .add-form h3{font-size:14px;font-weight:700;margin-bottom:12px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.single{grid-template-columns:1fr}
@@ -114,11 +124,12 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .pl{font-size:14px;font-weight:700}
 .ph{font-size:12px;color:var(--text3)}
 textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-family:Georgia,serif;resize:vertical;min-height:80px;width:100%}
+textarea.pi:focus{outline:none;border-color:var(--text2)}
+.taste-learned{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.6;padding:10px 12px;background:var(--bg3);border-radius:var(--rs)}
 /* Empty */
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
 .empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:14px;line-height:1.6}
-.sync-status{font-size:11px;color:var(--text3);font-style:italic;margin-top:4px;font-family:sans-serif}
 </style>
 </head>
 <body>
@@ -156,21 +167,18 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
     <div class="cards" id="recs-list"></div>
     <div class="empty" id="recs-empty">
       <div class="empty-icon">&#9675;</div>
-      <p>Press <strong>Find events</strong> to get matched recommendations.<br><br>Results cache for 24 hours.</p>
+      <p>Press <strong>Find events</strong> to get 20 matched recommendations across art, theatre, film and TV.<br><br>Results cache for 24 hours.</p>
     </div>
   </div>
 
   <!-- Diary -->
   <div class="panel" id="panel-diary">
+    <!-- Add form -->
     <div class="add-form">
       <h3>&#43; Add to diary</h3>
       <div class="form-row">
-        <div class="fg">
-          <label>Title</label>
-          <input type="text" id="add-title" placeholder="e.g. Hamlet at the National Theatre">
-        </div>
-        <div class="fg">
-          <label>Category</label>
+        <div class="fg"><label>Title</label><input type="text" id="add-title" placeholder="e.g. Hamlet at the National Theatre"></div>
+        <div class="fg"><label>Category</label>
           <select id="add-type">
             <option value="art">Art</option>
             <option value="theatre">Theatre</option>
@@ -180,40 +188,32 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
         </div>
       </div>
       <div class="form-row">
-        <div class="fg">
-          <label>Venue</label>
-          <input type="text" id="add-venue" placeholder="e.g. National Theatre, London">
-        </div>
-        <div class="fg">
-          <label>Dates</label>
-          <input type="text" id="add-dates" placeholder="e.g. 14 Jun – 30 Aug 2026">
-        </div>
+        <div class="fg"><label>Venue</label><input type="text" id="add-venue" placeholder="e.g. National Theatre, London"></div>
+        <div class="fg"><label>Dates</label><input type="text" id="add-dates" placeholder="e.g. 14 Jun – 30 Aug 2026"></div>
       </div>
       <div class="form-row single">
         <div class="fg">
           <label>Notes <span style="color:var(--text3)">(leave blank and we'll write a description)</span></label>
-          <textarea id="add-notes" placeholder="Optional — why you want to see it, how to get tickets..."></textarea>
+          <textarea id="add-notes" placeholder="Optional..."></textarea>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
         <button class="btn-pri" id="add-btn" onclick="addManual()">Add to diary</button>
-        <div class="sync-status" id="add-status"></div>
+        <span id="add-status" style="font-size:12px;color:var(--text3);font-family:sans-serif"></span>
       </div>
     </div>
 
-    <div id="diary-saved-section" style="display:none">
-      <div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>
-      <div id="diary-saved"></div>
+    <!-- Diary sub-tabs -->
+    <div class="diary-tabs">
+      <button class="dtab active" id="dtab-planning" onclick="setDiaryTab('planning')">Planning to see <span class="ct" id="dct-planning"></span></button>
+      <button class="dtab" id="dtab-seen" onclick="setDiaryTab('seen')">Seen <span class="ct" id="dct-seen"></span></button>
     </div>
 
-    <div id="diary-manual-section" style="display:none">
-      <div class="section-hdr" style="color:var(--blue)">Planning to see</div>
-      <div id="diary-manual"></div>
-    </div>
-
-    <div class="empty" id="diary-empty">
+    <div id="diary-planning-view"></div>
+    <div id="diary-seen-view" style="display:none"></div>
+    <div class="empty" id="diary-empty" style="display:none">
       <div class="empty-icon">&#9645;</div>
-      <p>Save events from recommendations or add your own above.<br><br>Your diary syncs across all your devices.</p>
+      <p>Nothing here yet. Save events from recommendations or add your own above.<br><br>Your diary syncs across all your devices.</p>
     </div>
   </div>
 
@@ -234,19 +234,20 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
         <div class="ph">Films, shows, exhibitions, plays</div>
         <textarea class="pi" id="pref-loved">Succession, All of Us Strangers, The Zone of Interest, The Lehman Trilogy, Tracey Emin at Tate Modern</textarea>
       </div>
+      <div id="taste-learned" class="taste-learned" style="display:none"></div>
       <div style="display:flex;gap:10px;align-items:center">
         <button class="btn-pri" onclick="savePrefs()">Save preferences</button>
         <span id="prefs-ok" style="font-size:13px;color:var(--green);display:none">&#10003; Saved</span>
       </div>
       <div style="font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:12px">
-        Saving preferences clears the recommendation cache so the next search uses your updated profile.
+        Saving preferences clears the recommendation cache. Your diary ratings automatically improve future recommendations.
       </div>
     </div>
   </div>
 </div>
 
 <script>
-var SK='curtain_v12';
+var SK='curtain_v13';
 var CACHE_MS=24*60*60*1000;
 var S={prefs:{love:'',dislike:'',loved:''},recs:[],cachedAt:null};
 try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign(S,JSON.parse(_d));}catch(e){}
@@ -255,9 +256,10 @@ function el(id){return document.getElementById(id);}
 function esc(s){return String(s||'').split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');}
 
 var currentFilter='all';
+var currentDiaryTab='planning';
 var diaryItems=[];
 
-// ── API call ─────────────────────────────────────────────────────────────────
+// ── API ───────────────────────────────────────────────────────────────────────
 function api(body,cb){
   fetch('/.netlify/functions/claude',{
     method:'POST',
@@ -288,6 +290,7 @@ function loadDiary(){
     if(err||!Array.isArray(data)) return;
     diaryItems=data;
     updateDiaryBadge();
+    updateTasteLearned();
     if(el('panel-diary').classList.contains('active')) renderDiary();
   });
 }
@@ -296,10 +299,8 @@ function saveDiaryItem(item,cb){
   api({action:'diary_save',item:item},function(err,data){
     if(err){if(cb)cb(err,null);return;}
     var saved=Array.isArray(data)?data[0]:data;
-    if(saved&&saved.id){
-      diaryItems.unshift(saved);
-      updateDiaryBadge();
-    }
+    if(saved&&saved.id) diaryItems.unshift(saved);
+    updateDiaryBadge();
     if(cb)cb(null,saved);
   });
 }
@@ -308,12 +309,14 @@ function updateDiaryItem(id,fields){
   api({action:'diary_update',id:id,fields:fields},function(){});
   var item=diaryItems.find(function(d){return d.id===id;});
   if(item) Object.assign(item,fields);
+  updateTasteLearned();
 }
 
 function deleteDiaryItem(id){
   api({action:'diary_delete',id:id},function(){});
   diaryItems=diaryItems.filter(function(d){return d.id!==id;});
   updateDiaryBadge();
+  updateTasteLearned();
   renderDiary();
 }
 
@@ -331,6 +334,33 @@ function updateCacheInfo(){
   el('refresh-btn').style.display='inline-block';
 }
 
+// ── Taste learning ────────────────────────────────────────────────────────────
+function getTasteFromDiary(){
+  var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
+  if(!seen.length) return '';
+  var loved=seen.filter(function(d){return d.rating>=4;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
+  var mixed=seen.filter(function(d){return d.rating===3;}).map(function(d){return d.title;});
+  var disliked=seen.filter(function(d){return d.rating<=2;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
+  var parts=[];
+  if(loved.length) parts.push('Loved: '+loved.join(', '));
+  if(mixed.length) parts.push('Mixed feelings: '+mixed.join(', '));
+  if(disliked.length) parts.push('Disappointed by: '+disliked.join(', '));
+  return parts.length?'\nLearned from diary: '+parts.join(' | '):'';
+}
+
+function updateTasteLearned(){
+  var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
+  var box=el('taste-learned');
+  if(!seen.length){box.style.display='none';return;}
+  box.style.display='block';
+  var loved=seen.filter(function(d){return d.rating>=4;});
+  var disliked=seen.filter(function(d){return d.rating<=2;});
+  var lines=[];
+  if(loved.length) lines.push('&#10003; Loved: '+loved.map(function(d){return d.title;}).join(', '));
+  if(disliked.length) lines.push('&#8595; Enjoyed less: '+disliked.map(function(d){return d.title;}).join(', '));
+  box.innerHTML='<strong style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3)">Learned from your diary</strong><br>'+lines.join('<br>');
+}
+
 // ── Navigation ────────────────────────────────────────────────────────────────
 function showPanel(id){
   ['discover','diary','prefs'].forEach(function(p){el('panel-'+p).classList.toggle('active',p===id);});
@@ -338,7 +368,7 @@ function showPanel(id){
     var tab=el('ntab-'+t);if(tab)tab.classList.remove('active');
   });
   if(id==='diary'){el('ntab-diary').classList.add('active');renderDiary();}
-  else if(id==='prefs'){el('ntab-prefs').classList.add('active');}
+  else if(id==='prefs'){el('ntab-prefs').classList.add('active');updateTasteLearned();}
 }
 
 function setFilter(type){
@@ -352,6 +382,14 @@ function setFilter(type){
   renderRecs(S.recs,type);
 }
 
+function setDiaryTab(tab){
+  currentDiaryTab=tab;
+  ['planning','seen'].forEach(function(t){
+    el('dtab-'+t).classList.toggle('active',t===tab);
+    el('diary-'+t+'-view').style.display=t===tab?'block':'none';
+  });
+}
+
 // ── Prefs ─────────────────────────────────────────────────────────────────────
 function getPrefs(){return{love:el('pref-love').value,dislike:el('pref-dislike').value,loved:el('pref-loved').value};}
 function savePrefs(){
@@ -359,8 +397,10 @@ function savePrefs(){
   el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2000);
 }
 function getDiaryCtx(){
-  var r=diaryItems.filter(function(d){return d.rating>0;});
-  return r.length?'\nDiary ratings: '+r.map(function(d){return d.title+' ('+d.rating+'/5)';}).join(', '):'';
+  var learned=getTasteFromDiary();
+  var planning=diaryItems.filter(function(d){return !d.seen_at&&d.rating>0;});
+  var planningStr=planning.length?'\nPlanning to see and rated: '+planning.map(function(d){return d.title+' ('+d.rating+'/5)';}).join(', '):'';
+  return learned+planningStr;
 }
 
 // ── Status ────────────────────────────────────────────────────────────────────
@@ -374,49 +414,67 @@ function setStatus(msg,type){
 function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
-// ── Find events ───────────────────────────────────────────────────────────────
+// ── Find events — 4 calls, 5 each = 20 total ─────────────────────────────────
+var CATALOGUE={
+  art:'Tracey Emin/Tate Modern (until Aug 2026, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), Hepworth in Colour/Courtauld (Jun-Sep, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), Ana Mendieta/Tate Modern (from Jul 9, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), Frida Kahlo/Tate Modern (from Jun 25, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), Hurvin Anderson/Tate Britain (until Aug 23, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/03/26/hurvin-anderson), Project a Black Planet/Barbican (Jun-Sep).',
+  theatre:'Glengarry Glen Ross/Old Vic (until Jul 18, bookingUrl:https://www.oldvictheatre.com), Arcadia/Duke of Yorks (Jun 20-Sep 12, bookingUrl:https://arcadiawestend.co.uk), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18), Hamlet/National Theatre (check listings).',
+  film:'I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now, bookingUrl:https://www.curzon.com), The Odyssey dir Christopher Nolan (Jul 17), My Fathers Island/Curzon (Jul 3), The Girls/BFI (Jul 10), Rosebush Pruning/MUBI (Jul 10).',
+  tv:'Half Man by Richard Gadd (BBC iPlayer and HBO, streaming now), Falling by Jack Thorne (Channel 4, now), Dirty Business docudrama (Channel 4), The Night Manager Series 2 (BBC iPlayer), Babies by Stefan Golaszewski (BBC iPlayer).'
+};
+
+function buildPrompt(type,prefs){
+  return 'Return a JSON array of exactly 5 UK '+type+' events for June-September 2026.\n'
+    +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+getDiaryCtx()+'\n\n'
+    +'Choose from: '+CATALOGUE[type]+'\n\n'
+    +'Each item must have exactly: title, type("'+type+'"), venue, location, dates, tags(array max 3), summary(one sentence tailored to their taste), press(short string), matchScore(integer 0-100), matchReason(one short sentence), artfundUrl(string or null), bookingUrl(string or null).\n'
+    +'Return ONLY the JSON array, nothing else.';
+}
+
 function callClaude(type,prefs,cb){
-  var options={
-    'art and theatre':'Art: Tracey Emin/Tate Modern, Hepworth/Courtauld, Ana Mendieta/Tate Modern, Frida Kahlo/Tate Modern, Hurvin Anderson/Tate Britain. Theatre: Glengarry Glen Ross/Old Vic, Arcadia/Duke of Yorks, To Kill a Mockingbird/West End, Midsummer Nights Dream/Regents Park.',
-    'film and tv':'Film: I See Buildings Fall Like Lightning/Curzon, The Odyssey/Nolan Jul 17, My Fathers Island/Curzon Jul 3, The Girls/BFI, Rosebush Pruning/MUBI. TV: Half Man/BBC+HBO, Falling/Channel 4, Dirty Business/Channel 4, Night Manager S2/BBC, Babies/BBC.'
-  };
-  var prompt='Return a JSON array of exactly 5 '+type+' events for UK June-September 2026.\n'
-    +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\n'
-    +'Choose from: '+options[type]+'\n'
-    +'Each item: title, type(art|theatre|film|tv), venue, location, dates, tags(array 2), summary(one sentence), press(few words), matchScore(0-100), matchReason(few words), artfundUrl(null), bookingUrl(null).\n'
-    +'Return ONLY the JSON array.';
   api({
     model:'claude-sonnet-4-6',max_tokens:1500,
-    system:'Return ONLY a valid JSON array. No markdown. Start with [ end with ].',
-    messages:[{role:'user',content:prompt}]
+    system:'Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
+    messages:[{role:'user',content:buildPrompt(type,prefs)}]
   },function(err,data){
     if(err){cb(err,null);return;}
     if(data&&data.error){cb(new Error(data.error),null);return;}
     var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     text=text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
     try{cb(null,JSON.parse(text));}
-    catch(e){cb(new Error('Parse error'),null);}
+    catch(e){cb(new Error('Parse error: '+e.message),null);}
   });
 }
 
 function findEvents(forceRefresh){
   if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs,currentFilter);updateCacheInfo();return;}
-  setBusy(true);setProg(10);el('recs-empty').style.display='none';
+  setBusy(true);setProg(5);el('recs-empty').style.display='none';
   var prefs=getPrefs();
-  setStatus('Finding art and theatre events...');
-  callClaude('art and theatre',prefs,function(err1,batch1){
-    if(err1){setProg(null);setBusy(false);setStatus('Error: '+err1.message,'err');return;}
-    setProg(55);setStatus('Finding film and TV events...');
-    callClaude('film and tv',prefs,function(err2,batch2){
+  var results=[];
+  var types=['art','theatre','film','tv'];
+  var labels={art:'Art',theatre:'Theatre',film:'Film',tv:'TV'};
+  var step=0;
+
+  function next(){
+    if(step>=4){
       setProg(null);setBusy(false);
-      if(err2){setStatus('Error: '+err2.message,'err');return;}
-      var events=(batch1||[]).concat(batch2||[]);
-      S.recs=events;S.cachedAt=Date.now();persist();
-      renderRecs(events,currentFilter);updateCacheInfo();updateCounts(events);
-      setStatus('Loaded '+events.length+' events — cached for 24 hours','ok');
+      S.recs=results;S.cachedAt=Date.now();persist();
+      renderRecs(results,currentFilter);updateCacheInfo();updateCounts(results);
+      setStatus('Loaded '+results.length+' events — cached for 24 hours','ok');
       setTimeout(function(){setStatus('');},5000);
+      return;
+    }
+    var type=types[step];
+    setStatus('Finding '+labels[type]+' events ('+( step+1)+' of 4)...');
+    setProg(5+(step*22));
+    callClaude(type,prefs,function(err,batch){
+      if(!err&&batch) results=results.concat(batch);
+      else if(err) console.warn('Error for '+type+':',err.message);
+      step++;
+      // Small delay between calls to avoid rate limiting
+      setTimeout(next,300);
     });
-  });
+  }
+  next();
 }
 
 // ── Counts ────────────────────────────────────────────────────────────────────
@@ -427,7 +485,11 @@ function updateCounts(recs){
   var all=el('ct-all');if(all)all.textContent=total||'';
 }
 function updateDiaryBadge(){
+  var planning=diaryItems.filter(function(d){return !d.seen_at;}).length;
+  var seen=diaryItems.filter(function(d){return d.seen_at;}).length;
   var ct=el('ct-diary');if(ct)ct.textContent=diaryItems.length||'';
+  var dcp=el('dct-planning');if(dcp)dcp.textContent=planning||'';
+  var dcs=el('dct-seen');if(dcs)dcs.textContent=seen||'';
 }
 
 // ── Render recs ───────────────────────────────────────────────────────────────
@@ -487,7 +549,7 @@ function makeCard(ev,i){
     +'</div></div>';
   card.querySelector('.btn-save').addEventListener('click',function(){
     var btn=this;
-    if(inD) return;
+    if(btn.classList.contains('saved')) return;
     btn.textContent='Saving...';btn.disabled=true;
     saveDiaryItem({
       title:ev.title,type:ev.type,venue:ev.venue||'',dates:ev.dates||'',
@@ -495,40 +557,79 @@ function makeCard(ev,i){
       note:'',rating:0,source:'rec'
     },function(){
       btn.innerHTML='&#10003; Saved';btn.classList.add('saved');btn.disabled=false;
-      inD=true;
     });
   });
   return card;
 }
 
-// ── Diary render ──────────────────────────────────────────────────────────────
+// ── Diary ─────────────────────────────────────────────────────────────────────
 function renderDiary(){
-  var savedEl=el('diary-saved'),manualEl=el('diary-manual');
-  var savedSec=el('diary-saved-section'),manualSec=el('diary-manual-section');
+  var planningView=el('diary-planning-view');
+  var seenView=el('diary-seen-view');
   var empty=el('diary-empty');
-  savedEl.innerHTML='';manualEl.innerHTML='';
-  var recs=diaryItems.filter(function(d){return d.source==='rec';});
-  var manual=diaryItems.filter(function(d){return d.source==='manual';});
-  if(!recs.length){savedSec.style.display='none';}
-  else{savedSec.style.display='block';recs.forEach(function(item){savedEl.appendChild(makeDiaryCard(item));});}
-  if(!manual.length){manualSec.style.display='none';}
-  else{manualSec.style.display='block';manual.forEach(function(item){manualEl.appendChild(makeDiaryCard(item));});}
-  empty.style.display=(!recs.length&&!manual.length)?'block':'none';
+  planningView.innerHTML='';seenView.innerHTML='';
+
+  var planning=diaryItems.filter(function(d){return !d.seen_at;});
+  var seen=diaryItems.filter(function(d){return !!d.seen_at;});
+
+  updateDiaryBadge();
+
+  if(!planning.length&&!seen.length){
+    empty.style.display='block';
+    planningView.style.display='none';
+    seenView.style.display='none';
+    return;
+  }
+  empty.style.display='none';
+
+  // Planning view
+  if(!planning.length){
+    planningView.innerHTML='<div class="empty" style="padding:2rem"><p>Nothing planned yet. Save events or add your own above.</p></div>';
+  } else {
+    var recs=planning.filter(function(d){return d.source==='rec';});
+    var manual=planning.filter(function(d){return d.source==='manual';});
+    if(recs.length){
+      planningView.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>');
+      recs.forEach(function(item){planningView.appendChild(makeDiaryCard(item));});
+    }
+    if(manual.length){
+      planningView.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--blue)">Added manually</div>');
+      manual.forEach(function(item){planningView.appendChild(makeDiaryCard(item));});
+    }
+  }
+
+  // Seen view
+  if(!seen.length){
+    seenView.innerHTML='<div class="empty" style="padding:2rem"><p>Nothing marked as seen yet.</p></div>';
+  } else {
+    seen.forEach(function(item){seenView.appendChild(makeDiaryCard(item));});
+  }
+
+  // Make sure correct tab view is showing
+  el('diary-planning-view').style.display=currentDiaryTab==='planning'?'block':'none';
+  el('diary-seen-view').style.display=currentDiaryTab==='seen'?'block':'none';
 }
 
 function makeDiaryCard(item){
   var c=document.createElement('div');
-  c.className='dcard'+(item.source==='manual'?' manual':'');
+  var isSeen=!!item.seen_at;
+  c.className='dcard'+(item.source==='manual'?' manual':'')+(isSeen?' seen-card':'');
   var tc=TC[item.type]||'#888';
-  var stars=[1,2,3,4,5].map(function(n){return'<span class="star'+(item.rating>=n?' lit':'')+'" data-id="'+item.id+'" data-n="'+n+'">&#9733;</span>';}).join('');
-  // Show summary from recommendation if available
-  var summaryHtml=item.summary?'<div class="dsummary">'+esc(item.summary)+'</div>':'';
+  var stars=[1,2,3,4,5].map(function(n){
+    return'<span class="star'+(item.rating>=n?' lit':'')+'" data-id="'+item.id+'" data-n="'+n+'">&#9733;</span>';
+  }).join('');
+  var seenDateStr=isSeen?'<span class="seen-date">&#10003; Seen '+new Date(item.seen_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</span>':'';
   c.innerHTML='<div style="display:flex;justify-content:space-between;align-items:start;gap:12px"><div style="flex:1">'
     +'<div style="font-size:16px;font-weight:700">'+esc(item.title)+'</div>'
     +'<div style="font-size:12px;color:'+tc+';margin-top:3px">'+esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
-    +summaryHtml
+    +(item.summary?'<div class="dsummary">'+esc(item.summary)+'</div>':'')
     +'<div class="stars">'+stars+'</div>'
     +'<textarea class="dnote" placeholder="Your notes..." data-id="'+item.id+'">'+esc(item.note||'')+'</textarea>'
+    +'<div class="dcard-actions">'
+    +(isSeen
+      ? seenDateStr+'<button class="btn-sm" data-id="'+item.id+'" onclick="markUnseen(this)">Move back to planning</button>'
+      : '<button class="btn-sm seen" data-id="'+item.id+'" onclick="markSeen(this)">&#10003; Mark as seen</button>')
+    +'</div>'
     +'</div>'
     +'<button class="rem-btn" data-id="'+item.id+'" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px">&#10005;</button>'
     +'</div>';
@@ -548,7 +649,31 @@ function makeDiaryCard(item){
   return c;
 }
 
-// ── Add manual entry ──────────────────────────────────────────────────────────
+function markSeen(btn){
+  var id=btn.dataset.id;
+  var now=new Date().toISOString();
+  updateDiaryItem(id,{seen_at:now});
+  var item=diaryItems.find(function(d){return d.id===id;});
+  if(item) item.seen_at=now;
+  updateDiaryBadge();
+  updateTasteLearned();
+  renderDiary();
+  // Switch to seen tab
+  setDiaryTab('seen');
+}
+
+function markUnseen(btn){
+  var id=btn.dataset.id;
+  updateDiaryItem(id,{seen_at:null});
+  var item=diaryItems.find(function(d){return d.id===id;});
+  if(item) item.seen_at=null;
+  updateDiaryBadge();
+  updateTasteLearned();
+  renderDiary();
+  setDiaryTab('planning');
+}
+
+// ── Add manual ────────────────────────────────────────────────────────────────
 function addManual(){
   var title=el('add-title').value.trim();
   if(!title){el('add-title').focus();return;}
@@ -559,28 +684,24 @@ function addManual(){
 
   function doSave(note){
     saveDiaryItem({
-      title:title,
-      type:el('add-type').value,
+      title:title,type:el('add-type').value,
       venue:el('add-venue').value.trim(),
       dates:el('add-dates').value.trim(),
-      note:note,
-      summary:'',press:'',matchReason:'',
+      note:note,summary:'',press:'',matchReason:'',
       rating:0,source:'manual'
     },function(){
-      btn.disabled=false;
-      status.textContent='';
-      el('add-title').value='';el('add-venue').value='';el('add-dates').value='';el('add-notes').value='';
+      btn.disabled=false;status.textContent='';
+      el('add-title').value='';el('add-venue').value='';
+      el('add-dates').value='';el('add-notes').value='';
       renderDiary();
-      showPanel('diary');
+      setDiaryTab('planning');
     });
   }
 
   if(!notes){
-    // Auto-generate description
     status.textContent='Writing a description...';
     api({action:'diary_autofill',title:title,type:el('add-type').value},function(err,data){
-      var desc=(data&&data.description)||'';
-      doSave(desc);
+      doSave((data&&data.description)||'');
     });
   } else {
     doSave(notes);
