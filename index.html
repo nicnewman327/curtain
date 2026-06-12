@@ -301,7 +301,7 @@ function buildPrompt(prefs, type){
   return 'Return a JSON array of exactly 5 UK '+type+' events for June-September 2026.\n'
   +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+'\nRECENTLY LOVED: '+prefs.loved+getDiaryCtx()+'\n\n'
   +'Choose from: '+options[type]+'\n\n'
-  +'Each item must have: title, type("'+type+'"), venue, location, dates, tags(array max 3), summary(1 sentence written for their taste), press(short string), matchScore(integer 0-100), matchReason(one short sentence), artfundUrl(string or null), bookingUrl(string or null).\n'
+  +'Each item: title, type("'+type+'"), venue, location, dates, tags(array max 2), summary(max 15 words), press(max 8 words), matchScore(integer 0-100), matchReason(max 10 words), artfundUrl(null), bookingUrl(null).\n'
   +'Return ONLY the JSON array, no other text.';
 }
 
@@ -314,7 +314,7 @@ function callAPI(prompt, callback){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-sonnet-4-6',
-      max_tokens:2000,
+      max_tokens:1200,
       system:'You are a UK cultural events advisor. Return ONLY a valid JSON array. No markdown, no backticks. Start with [ and end with ].',
       messages:[{role:'user',content:prompt}]
     })
