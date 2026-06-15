@@ -27,7 +27,6 @@ exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
-
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
@@ -41,46 +40,31 @@ exports.handler = async function(event) {
     const res = await supabase('diary?order=created_at.desc', 'GET');
     return { statusCode: 200, headers, body: JSON.stringify(res.data) };
   }
-
   if (body.action === 'diary_save') {
     const item = body.item;
     const res = await supabase('diary', 'POST', {
-      title: item.title,
-      type: item.type,
-      venue: item.venue,
-      dates: item.dates,
-      note: item.note || '',
-      rating: item.rating || 0,
-      source: item.source || 'rec',
-      summary: item.summary || '',
-      press: item.press || '',
-      match_reason: item.matchReason || ''
+      title: item.title, type: item.type, venue: item.venue,
+      dates: item.dates, note: item.note || '', rating: item.rating || 0,
+      source: item.source || 'rec', summary: item.summary || '',
+      press: item.press || '', match_reason: item.matchReason || ''
     });
     return { statusCode: 200, headers, body: JSON.stringify(res.data) };
   }
-
   if (body.action === 'diary_update') {
     const res = await supabase('diary?id=eq.' + body.id, 'PATCH', body.fields);
     return { statusCode: 200, headers, body: JSON.stringify(res.data) };
   }
-
   if (body.action === 'diary_delete') {
     await supabase('diary?id=eq.' + body.id, 'DELETE');
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   }
-
   if (body.action === 'diary_autofill') {
     if (!ANTHROPIC_KEY) return { statusCode: 500, headers, body: JSON.stringify({ error: 'No API key' }) };
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 150,
+        model: 'claude-haiku-4-5-20251001', max_tokens: 150,
         messages: [{ role: 'user', content: 'Write a single sentence description (max 25 words) for this UK cultural event: "' + body.title + '" (category: ' + body.type + '). Just the sentence, nothing else.' }]
       })
     });
@@ -89,31 +73,42 @@ exports.handler = async function(event) {
     return { statusCode: 200, headers, body: JSON.stringify({ description: text.trim() }) };
   }
 
-  // ── Claude recommendations ────────────────────────────────────────────────
+  // ── Claude / digest ───────────────────────────────────────────────────────
   if (!ANTHROPIC_KEY) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' }) };
   }
 
   try {
+    // Build tools array — include web search for digest requests
+    const useWebSearch = body.use_web_search === true;
+    const requestBody = {
+      model: body.model || 'claude-sonnet-4-6',
+      max_tokens: body.max_tokens || 1500,
+      system: body.system || '',
+      messages: body.messages || []
+    };
+    if (useWebSearch) {
+      requestBody.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: body.model || 'claude-sonnet-4-6',
-        max_tokens: body.max_tokens || 1500,
-        system: body.system || '',
-        messages: body.messages || []
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify(requestBody)
     });
 
     const data = await response.json();
+
     if (data.stop_reason === 'max_tokens') {
       return { statusCode: 200, headers, body: JSON.stringify({ error: 'Response cut off — try again' }) };
     }
+
+    // For web search responses, extract only text blocks (ignore tool_use blocks)
+    if (useWebSearch && data.content) {
+      const textOnly = data.content.filter(b => b.type === 'text');
+      return { statusCode: 200, headers, body: JSON.stringify({ ...data, content: textOnly }) };
+    }
+
     return { statusCode: response.status, headers, body: JSON.stringify(data) };
   } catch(e) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
