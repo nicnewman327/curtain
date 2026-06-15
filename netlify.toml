@@ -1,4 +1,3 @@
-
 [build]
   functions = "netlify/functions"
 
@@ -7,3 +6,6 @@
 
 [functions.claude]
   timeout = 26
+
+[functions.digest-background]
+  timeout = 900
