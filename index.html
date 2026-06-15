@@ -463,33 +463,35 @@ function getDigest(force){
   el('refresh-btn').disabled=true;
 
   var prefs=getPrefs();
-  var catalogue='Currently on in London: Tracey Emin: A Second Life/Tate Modern (until Aug 2026), '
-    +'Hepworth in Colour/Courtauld (Jun-Sep), Frida: The Making of an Icon/Tate Modern (from 25 Jun), '
-    +'Ana Mendieta/Tate Modern (from 9 Jul), Hurvin Anderson/Tate Britain (until Aug), '
-    +'Project a Black Planet/Barbican (Jun-Sep). '
-    +'Theatre: Glengarry Glen Ross/Old Vic (until 18 Jul, world-first all-female cast), '
-    +'Arcadia/Duke of Yorks (20 Jun-12 Sep), To Kill a Mockingbird/West End (from 25 Jun). '
-    +'Film: I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now), '
-    +'The Odyssey dir Nolan (17 Jul). '
-    +'TV: Half Man/Richard Gadd (BBC+HBO now), Falling/Jack Thorne (Channel 4), Dirty Business (Channel 4).';
-
-  var prompt='Search the web for the latest UK arts and culture reviews from The Guardian, The Times, The Telegraph, The Arts Desk, Time Out London, The Stage, and BBC Culture. '
-    +'Then write a 650-word digest of the best new films, art exhibitions, theatre and TV on right now or coming up very soon. '
-    +'Focus on things getting 4 or 5 stars. Include a few choice quotes from reviews, properly attributed. '
+  var prompt='Write a 600-word arts and culture digest for a UK reader. '
     +'The reader loves: '+prefs.love+'. '
-    +'These events are currently on: '+catalogue+' '
-    +'Write in an engaging editorial voice — like a knowledgeable friend recommending things. '
-    +'Flowing paragraphs only, no bullet points, no section headers. Bold each event title when first mentioned. Approximately 650 words.';
+    +'They dislike: '+prefs.dislike+'\n\n'
+    +'Write about the following events currently on in the UK, drawing on your knowledge of critical reception from publications like the Guardian, Times, Telegraph, Arts Desk, Time Out and The Stage. '
+    +'Include star ratings and attributed quotes from critics where you know them.\n\n'
+    +'Events to cover:\n'
+    +'ART: Tracey Emin: A Second Life at Tate Modern (until Aug 2026) — 40-year career retrospective, Guardian 5 stars. '
+    +'Hepworth in Colour at the Courtauld (until 6 Sep) — first show dedicated to her use of colour. '
+    +'Frida: The Making of an Icon at Tate Modern (from 25 Jun) — first major UK Kahlo show in 20 years, 130+ works. '
+    +'Ana Mendieta at Tate Modern (from 9 Jul) — first UK major survey, Silueta Series and films. '
+    +'Project a Black Planet at the Barbican (until 6 Sep) — Pan-African art and culture, 300+ works.\n'
+    +'THEATRE: Glengarry Glen Ross at the Old Vic (until 18 Jul) — world-first all-female staging of Mamet, dir Patrick Marber, Indira Varma. '
+    +'Arcadia at Duke of Yorks Theatre (20 Jun–12 Sep) — Stoppard, Carrie Cracknell production transferred from Old Vic. '
+    +'To Kill a Mockingbird at the West End (from 25 Jun) — Aaron Sorkin adaptation, Richard Coyle as Atticus.\n'
+    +'FILM: I See Buildings Fall Like Lightning dir Clio Barnard — Cannes Directors Fortnight Audience Award winner, in Curzon cinemas now. '
+    +'The Odyssey dir Christopher Nolan — opening 17 July.\n'
+    +'TV: Half Man by Richard Gadd (BBC iPlayer and HBO) — follow-up to Baby Reindeer, streaming now. '
+    +'Falling by Jack Thorne (Channel 4) — Keeley Hawes, Paapa Essiedu, dir Peter Hoar.\n\n'
+    +'Write as a knowledgeable, enthusiastic critic recommending the best of what is on. '
+    +'Flowing paragraphs only, no bullet points, no section headers. '
+    +'Bold each event title when first mentioned. Approximately 600 words.';
 
   api({
     model:'claude-sonnet-4-6',
-    max_tokens:2000,
-    system:'You are an authoritative UK arts and culture writer. Search the web for current reviews then write in flowing, engaging prose.',
-    messages:[{role:'user',content:prompt}],
-    use_web_search:true
+    max_tokens:1800,
+    system:'You are an authoritative UK arts and culture writer with deep knowledge of current critical reception. Write in flowing, engaging prose like a knowledgeable friend recommending things.',
+    messages:[{role:'user',content:prompt}]
   },function(err,data){
     el('refresh-btn').disabled=false;
-    // Stringify error properly for debugging
     if(err){
       var em=err.message||JSON.stringify(err);
       setStatus('Digest error: '+em,'err');
@@ -497,21 +499,14 @@ function getDigest(force){
       if(dl) dl.querySelector('p').textContent='Error: '+em;
       return;
     }
-    if(!data){setStatus('Digest error: no response from server','err');return;}
+    if(!data){setStatus('Digest error: no response','err');return;}
     if(data.error){
       var de=typeof data.error==='string'?data.error:JSON.stringify(data.error);
       setStatus('Digest error: '+de,'err');
       return;
     }
-    // Log full response for debugging
-    console.log('Digest response:',JSON.stringify(data).substring(0,500));
     var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
-    if(!text){
-      var stopReason=data.stop_reason||'unknown';
-      var blockTypes=(data.content||[]).map(function(b){return b.type;}).join(',');
-      setStatus('Digest error: empty text. stop_reason='+stopReason+' blocks='+blockTypes,'err');
-      return;
-    }
+    if(!text){setStatus('Digest error: empty response','err');return;}
     S.digest=text;S.digestAt=Date.now();persist();
     renderDigest(text,S.digestAt);
     updateInfoBar();updateActionBtn();
