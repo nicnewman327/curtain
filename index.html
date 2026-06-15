@@ -489,17 +489,27 @@ function getDigest(force){
     use_web_search:true
   },function(err,data){
     el('refresh-btn').disabled=false;
-    var errMsg=err?err.message:(data&&data.error?data.error:null);
-    if(errMsg){
-      setStatus('Digest error: '+errMsg,'err');
+    // Stringify error properly for debugging
+    if(err){
+      var em=err.message||JSON.stringify(err);
+      setStatus('Digest error: '+em,'err');
       var dl=el('digest-loading');
-      if(dl) dl.querySelector('p').textContent='Error: '+errMsg;
+      if(dl) dl.querySelector('p').textContent='Error: '+em;
       return;
     }
-    if(!data){setStatus('No response from server','err');return;}
+    if(!data){setStatus('Digest error: no response from server','err');return;}
+    if(data.error){
+      var de=typeof data.error==='string'?data.error:JSON.stringify(data.error);
+      setStatus('Digest error: '+de,'err');
+      return;
+    }
+    // Log full response for debugging
+    console.log('Digest response:',JSON.stringify(data).substring(0,500));
     var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     if(!text){
-      setStatus('Digest error: empty response','err');
+      var stopReason=data.stop_reason||'unknown';
+      var blockTypes=(data.content||[]).map(function(b){return b.type;}).join(',');
+      setStatus('Digest error: empty text. stop_reason='+stopReason+' blocks='+blockTypes,'err');
       return;
     }
     S.digest=text;S.digestAt=Date.now();persist();
