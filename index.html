@@ -474,20 +474,23 @@ function getDigest(force){
     max_tokens:1200,
     system:'You are an authoritative UK arts and culture writer with access to current web search results. Write in flowing, engaging prose.',
     messages:[{role:'user',content:prompt}],
+    max_tokens:2000,
     use_web_search:true
   },function(err,data){
     el('refresh-btn').disabled=false;
-    if(err||!data){
-      if(force) setStatus('Error loading digest — try again','err');
-      el('digest-loading') && (el('digest-loading').querySelector('p').textContent='Could not load digest — tap Refresh to try again.');
+    var errMsg=err?err.message:(data&&data.error?data.error:null);
+    if(errMsg){
+      setStatus('Digest error: '+errMsg,'err');
+      var dl=el('digest-loading');
+      if(dl) dl.querySelector('p').textContent='Error: '+errMsg;
       return;
     }
-    if(data.error){
-      if(force) setStatus('Error: '+data.error,'err');
-      return;
-    }
+    if(!data){setStatus('No response from server','err');return;}
     var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
-    if(!text) return;
+    if(!text){
+      setStatus('Digest error: empty response — content blocks: '+(data.content?data.content.length:0),'err');
+      return;
+    }
     S.digest=text;S.digestAt=Date.now();persist();
     renderDigest(text,S.digestAt);
     updateInfoBar();updateActionBtn();
