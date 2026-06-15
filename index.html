@@ -401,11 +401,12 @@ function updateInfoBar(){
   var ts=currentPanel==='digest'?S.digestAt:currentPanel==='foryou'?S.recsAt:null;
   if(!ts){bar.className='infobar';return;}
   var age=Date.now()-ts;
-  var mins=Math.floor(age/60000),hrs=Math.floor(mins/60);
-  var stale=age>CACHE_MS;
-  var ageStr=hrs>0?(hrs+'h '+(mins%60)+'m ago'):(mins+'m ago');
+  var mins=Math.floor(age/60000),hrs=Math.floor(mins/60),days=Math.floor(hrs/24);
+  var weekMs=7*24*60*60*1000;
+  var stale=currentPanel==='digest'?age>weekMs:age>CACHE_MS;
+  var ageStr=days>0?(days+'d ago'):hrs>0?(hrs+'h ago'):(mins+'m ago');
   bar.className='infobar show '+(stale?'stale':'fresh');
-  bar.textContent=(stale?'⚠ Stale · ':' ✓ ')+'Updated '+ageStr;
+  bar.textContent=(stale?'⚠ ':'✓ ')+'Updated '+ageStr+(currentPanel==='digest'?' · refreshes weekly':'');
 }
 
 // ── Taste panel ───────────────────────────────────────────────────────────────
@@ -458,61 +459,60 @@ function setProg(p){if(p===null){el('prog').style.display='none';return;}el('pro
 
 // ── DIGEST ────────────────────────────────────────────────────────────────────
 function getDigest(force){
-  if(!force&&S.digest&&S.digestAt&&!isStale(S.digestAt)){renderDigest(S.digest,S.digestAt);return;}
-  if(force){setStatus('Refreshing digest...');}
-  el('refresh-btn').disabled=true;
+  // Load from Supabase first
+  fetch('/.netlify/functions/digest-trigger',{
+    method:'GET',
+    headers:{'Content-Type':'application/json'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(row){
+    var content=row&&row.content;
+    var createdAt=row&&row.created_at?new Date(row.created_at).getTime():null;
+    var age=createdAt?Date.now()-createdAt:Infinity;
+    var weekMs=7*24*60*60*1000;
+    var stale=age>weekMs;
 
-  var prefs=getPrefs();
-  var prompt='Write a 600-word arts and culture digest for a UK reader. '
-    +'The reader loves: '+prefs.love+'. '
-    +'They dislike: '+prefs.dislike+'\n\n'
-    +'Write about the following events currently on in the UK, drawing on your knowledge of critical reception from publications like the Guardian, Times, Telegraph, Arts Desk, Time Out and The Stage. '
-    +'Include star ratings and attributed quotes from critics where you know them.\n\n'
-    +'Events to cover:\n'
-    +'ART: Tracey Emin: A Second Life at Tate Modern (until Aug 2026) — 40-year career retrospective, Guardian 5 stars. '
-    +'Hepworth in Colour at the Courtauld (until 6 Sep) — first show dedicated to her use of colour. '
-    +'Frida: The Making of an Icon at Tate Modern (from 25 Jun) — first major UK Kahlo show in 20 years, 130+ works. '
-    +'Ana Mendieta at Tate Modern (from 9 Jul) — first UK major survey, Silueta Series and films. '
-    +'Project a Black Planet at the Barbican (until 6 Sep) — Pan-African art and culture, 300+ works.\n'
-    +'THEATRE: Glengarry Glen Ross at the Old Vic (until 18 Jul) — world-first all-female staging of Mamet, dir Patrick Marber, Indira Varma. '
-    +'Arcadia at Duke of Yorks Theatre (20 Jun–12 Sep) — Stoppard, Carrie Cracknell production transferred from Old Vic. '
-    +'To Kill a Mockingbird at the West End (from 25 Jun) — Aaron Sorkin adaptation, Richard Coyle as Atticus.\n'
-    +'FILM: I See Buildings Fall Like Lightning dir Clio Barnard — Cannes Directors Fortnight Audience Award winner, in Curzon cinemas now. '
-    +'The Odyssey dir Christopher Nolan — opening 17 July.\n'
-    +'TV: Half Man by Richard Gadd (BBC iPlayer and HBO) — follow-up to Baby Reindeer, streaming now. '
-    +'Falling by Jack Thorne (Channel 4) — Keeley Hawes, Paapa Essiedu, dir Peter Hoar.\n\n'
-    +'Write as a knowledgeable, enthusiastic critic recommending the best of what is on. '
-    +'Flowing paragraphs only, no bullet points, no section headers. '
-    +'Bold each event title when first mentioned. Approximately 600 words.';
-
-  api({
-    model:'claude-sonnet-4-6',
-    max_tokens:1800,
-    system:'You are an authoritative UK arts and culture writer with deep knowledge of current critical reception. Write in flowing, engaging prose like a knowledgeable friend recommending things.',
-    messages:[{role:'user',content:prompt}]
-  },function(err,data){
-    el('refresh-btn').disabled=false;
-    if(err){
-      var em=err.message||JSON.stringify(err);
-      setStatus('Digest error: '+em,'err');
+    if(content&&!force){
+      // Show cached content
+      S.digest=content;S.digestAt=createdAt;persist();
+      renderDigest(content,createdAt);
+      updateInfoBar();updateActionBtn();
+      // Trigger background refresh if stale
+      if(stale) triggerDigestRefresh();
+    } else {
+      // No content or force refresh — trigger background and show loading
+      triggerDigestRefresh();
       var dl=el('digest-loading');
-      if(dl) dl.querySelector('p').textContent='Error: '+em;
-      return;
+      if(dl) dl.querySelector('p').textContent='Searching for the latest reviews — this takes about 20 seconds...';
+      // Poll for result every 5 seconds for up to 60 seconds
+      var polls=0;
+      var poller=setInterval(function(){
+        polls++;
+        if(polls>12){clearInterval(poller);setStatus('Digest taking longer than expected — check back in a moment','err');return;}
+        fetch('/.netlify/functions/digest-trigger',{method:'GET'})
+        .then(function(r){return r.json();})
+        .then(function(r2){
+          if(r2&&r2.content&&r2.content.length>100){
+            clearInterval(poller);
+            S.digest=r2.content;S.digestAt=new Date(r2.created_at).getTime();persist();
+            renderDigest(r2.content,S.digestAt);
+            updateInfoBar();updateActionBtn();
+            if(force){setStatus('Digest updated','ok');setTimeout(function(){setStatus('');},3000);}
+          }
+        }).catch(function(){});
+      },5000);
     }
-    if(!data){setStatus('Digest error: no response','err');return;}
-    if(data.error){
-      var de=typeof data.error==='string'?data.error:JSON.stringify(data.error);
-      setStatus('Digest error: '+de,'err');
-      return;
-    }
-    var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
-    if(!text){setStatus('Digest error: empty response','err');return;}
-    S.digest=text;S.digestAt=Date.now();persist();
-    renderDigest(text,S.digestAt);
-    updateInfoBar();updateActionBtn();
-    if(force){setStatus('Digest updated','ok');setTimeout(function(){setStatus('');},3000);}
+  })
+  .catch(function(e){
+    setStatus('Digest error: '+e.message,'err');
   });
 }
+
+function triggerDigestRefresh(){
+  fetch('/.netlify/functions/digest-trigger',{method:'POST'})
+  .catch(function(e){console.log('Trigger error:',e.message);});
+}
+
 
 function renderDigest(text,ts){
   var d=new Date(ts);
