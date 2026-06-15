@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Curtain">
 <title>Curtain</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -26,17 +29,18 @@
   --red:#c45050;--red-bg:#2a0e0e;
 }}
 body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;min-height:100vh}
+
+/* ── Top nav ── */
 .topnav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
-.topnav-inner{display:flex;align-items:center;padding:0 1rem;overflow-x:auto;scrollbar-width:none}
+.topnav-inner{display:flex;align-items:center;padding:0 1.25rem;overflow-x:auto;scrollbar-width:none}
 .topnav-inner::-webkit-scrollbar{display:none}
-.logo{font-size:16px;font-weight:700;letter-spacing:-.03em;padding:.85rem 1rem .85rem 0;margin-right:.5rem;border-right:1px solid var(--border);white-space:nowrap;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.logo{font-size:16px;font-weight:700;letter-spacing:-.03em;padding:.9rem 1.1rem .9rem 0;margin-right:.6rem;border-right:1px solid var(--border);white-space:nowrap;display:flex;align-items:center;gap:7px;flex-shrink:0}
 .logo-sq{width:22px;height:22px;background:var(--text);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .logo-sq svg{width:11px;height:11px;fill:var(--bg)}
 .nav-tabs{display:flex;align-items:center;flex:1}
-.ntab{padding:.85rem .9rem;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .12s;flex-shrink:0}
+.ntab{padding:.9rem 1rem;font-size:14px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .12s;flex-shrink:0}
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
-.ntab .ct{display:inline-block;background:var(--bg3);border-radius:99px;font-size:10px;padding:1px 5px;margin-left:3px;font-weight:normal}
 .nav-right{display:flex;align-items:center;gap:8px;padding-left:.75rem;margin-left:auto;flex-shrink:0}
 .btn-pri{font-size:13px;padding:7px 15px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700;transition:opacity .15s;white-space:nowrap}
 .btn-pri:hover{opacity:.82}
@@ -46,28 +50,58 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .btn-sm{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
 .btn-sm:hover{background:var(--bg2)}
 .btn-sm.seen{background:var(--green-bg);color:var(--green);border-color:var(--green)}
-.infobar{display:none;align-items:center;gap:10px;padding:.5rem 1.5rem;border-bottom:1px solid var(--border);font-size:12px;color:var(--text3)}
+
+/* ── Sub nav (For You filters) ── */
+.subnav{background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;display:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav.show{display:block}
+.subnav-inner{display:flex;padding:0 1.25rem}
+.stab{padding:.6rem .85rem;font-size:12px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.stab:hover{color:var(--text)}
+.stab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600}
+.stab .ct{display:inline-block;background:var(--bg3);border-radius:99px;font-size:10px;padding:1px 5px;margin-left:3px;font-weight:normal}
+
+/* ── Info bar ── */
+.infobar{display:none;align-items:center;gap:10px;padding:.45rem 1.5rem;border-bottom:1px solid var(--border);font-size:11px;color:var(--text3);font-family:sans-serif}
 .infobar.show{display:flex}
 .infobar.fresh{color:var(--green)}
 .infobar.stale{color:var(--amber)}
-.main{max-width:880px;margin:0 auto;padding:1.5rem}
-@media(max-width:600px){.main{padding:1rem}.nav-right .btn-sec{display:none}}
-.status-bar{display:none;align-items:center;gap:9px;font-size:13px;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);margin-bottom:14px}
+
+/* ── Main content ── */
+.main{max-width:820px;margin:0 auto;padding:1.75rem 1.5rem}
+@media(max-width:600px){.main{padding:1.1rem 1rem}.nav-right .btn-sec{display:none}.ntab{padding:.9rem .7rem;font-size:13px}}
+
+/* ── Status / progress ── */
+.status-bar{display:none;align-items:center;gap:9px;font-size:13px;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);margin-bottom:16px}
 .status-bar.show{display:flex}
 .status-bar.ok{color:var(--green);border-color:var(--green-bg);background:var(--green-bg)}
 .status-bar.err{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}
 .status-bar.info{color:var(--text2);border-color:var(--border);background:var(--bg2)}
 .spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:14px}
+.prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:16px}
 .prog-fill{height:100%;background:var(--green);border-radius:99px;width:0%;transition:width .4s}
+
+/* ── Panels ── */
 .panel{display:none}
 .panel.active{display:block}
-/* Diary tabs */
-.diary-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px}
-.dtab{padding:8px 16px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px}
-.dtab.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
-.section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px}
+
+/* ── Digest ── */
+.digest-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;gap:12px;flex-wrap:wrap}
+.digest-title{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.digest-date{font-size:13px;color:var(--text3);font-family:sans-serif}
+.digest-body{font-size:15px;line-height:1.8;color:var(--text)}
+.digest-body p{margin-bottom:1.1rem}
+.digest-body p:last-child{margin-bottom:0}
+.digest-body strong{color:var(--text);font-weight:700}
+.digest-body em{font-style:italic}
+.digest-sources{font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);line-height:1.6}
+.digest-empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
+.digest-empty .ei{font-size:36px;margin-bottom:12px;opacity:.4}
+.digest-empty p{font-size:14px;line-height:1.6}
+
+/* ── Event cards ── */
+.section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px;font-family:sans-serif}
 .section-hdr:first-child{margin-top:0}
 .cards{display:flex;flex-direction:column;gap:12px}
 .ecard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;background:var(--bg);transition:border-color .12s}
@@ -76,31 +110,32 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .etype{width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:5px}
 .etype svg{width:14px;height:14px}
 .etitle{font-size:16px;font-weight:700;line-height:1.3}
-.emeta{font-size:12px;color:var(--text2);margin-top:3px}
+.emeta{font-size:12px;color:var(--text2);margin-top:3px;font-family:sans-serif}
 .etags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.etag{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--border2);color:var(--text3)}
+.etag{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--border2);color:var(--text3);font-family:sans-serif}
 .ematch{font-size:12px;color:var(--green);margin-top:6px;font-style:italic}
 .esummary{font-size:13px;color:var(--text2);margin-top:8px;line-height:1.6;border-left:2px solid var(--border2);padding-left:11px}
-.epress{font-size:12px;color:var(--text3);margin-top:5px}
-.eaf{font-size:12px;margin-top:6px}
+.epress{font-size:12px;color:var(--text3);margin-top:5px;font-family:sans-serif}
+.eaf{font-size:12px;margin-top:6px;font-family:sans-serif}
 .eaf a{color:var(--green);text-decoration:none}
 .eaf a:hover{text-decoration:underline}
 .score-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:60px}
 .score-n{font-size:24px;font-weight:700;line-height:1}
 .score-sm{font-size:11px;font-weight:normal;color:var(--text3)}
-.score-l{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
-.btn-save{font-size:12px;padding:5px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
+.score-l{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;font-family:sans-serif}
+.btn-save{font-size:12px;padding:5px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap;transition:all .12s}
 .btn-save:hover{background:var(--bg2)}
 .btn-save.saved{color:var(--green);border-color:var(--green)}
-.book-link{font-size:12px;color:var(--text3);text-decoration:none;display:block;text-align:right}
+.book-link{font-size:12px;color:var(--text3);text-decoration:none;display:block;text-align:right;font-family:sans-serif}
 .book-link:hover{color:var(--text)}
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;vertical-align:middle}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;vertical-align:middle;font-family:sans-serif}
 .badge-top{background:var(--amber-bg);color:var(--amber)}
 .badge-hi{background:var(--blue-bg);color:var(--blue)}
-/* Diary cards */
+
+/* ── Diary cards ── */
 .dcard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:12px;background:var(--bg)}
 .dcard.manual{border-style:dashed}
-.dcard.seen-card{border-color:var(--green);opacity:.85}
+.dcard.seen-card{border-color:var(--green)}
 .dsummary{font-size:13px;color:var(--text2);margin-top:7px;line-height:1.55;font-style:italic}
 .stars{display:flex;gap:4px;margin-top:8px}
 .star{font-size:20px;cursor:pointer;color:var(--border2);line-height:1;user-select:none;transition:color .1s}
@@ -108,7 +143,8 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .dnote{font-size:13px;margin-top:8px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;width:100%;resize:none;min-height:46px}
 .dcard-actions{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
 .seen-date{font-size:11px;color:var(--green);font-family:sans-serif}
-/* Add form */
+
+/* ── Plan to See add form ── */
 .add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:16px;background:var(--bg2)}
 .add-form h3{font-size:14px;font-weight:700;margin-bottom:12px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
@@ -118,17 +154,21 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .fg label{font-size:12px;color:var(--text2);font-family:sans-serif}
 .fg input,.fg select,.fg textarea{font-size:13px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;width:100%}
 .fg textarea{resize:vertical;min-height:60px}
-/* Prefs */
+
+/* ── Taste panel ── */
+.taste-btn{font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:inherit;padding:.9rem 1rem;display:flex;align-items:center;gap:6px}
+.taste-btn:hover{color:var(--text)}
 .prefs-grid{display:flex;flex-direction:column;gap:16px;max-width:640px}
 .pg{display:flex;flex-direction:column;gap:6px}
 .pl{font-size:14px;font-weight:700}
 .ph{font-size:12px;color:var(--text3)}
 textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-family:Georgia,serif;resize:vertical;min-height:80px;width:100%}
 textarea.pi:focus{outline:none;border-color:var(--text2)}
-.taste-learned{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.6;padding:10px 12px;background:var(--bg3);border-radius:var(--rs)}
-/* Empty */
+.taste-learned{font-size:12px;color:var(--text3);padding:10px 12px;background:var(--bg3);border-radius:var(--rs);line-height:1.6;display:none}
+
+/* ── Empty ── */
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
-.empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
+.empty .ei{font-size:36px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:14px;line-height:1.6}
 </style>
 </head>
@@ -141,50 +181,101 @@ textarea.pi:focus{outline:none;border-color:var(--text2)}
       Curtain
     </div>
     <div class="nav-tabs">
-      <button class="ntab active" id="ntab-all" onclick="setFilter('all')">All <span class="ct" id="ct-all"></span></button>
-      <button class="ntab" id="ntab-art" onclick="setFilter('art')">Art <span class="ct" id="ct-art"></span></button>
-      <button class="ntab" id="ntab-theatre" onclick="setFilter('theatre')">Theatre <span class="ct" id="ct-theatre"></span></button>
-      <button class="ntab" id="ntab-film" onclick="setFilter('film')">Film <span class="ct" id="ct-film"></span></button>
-      <button class="ntab" id="ntab-tv" onclick="setFilter('tv')">TV <span class="ct" id="ct-tv"></span></button>
-      <button class="ntab" id="ntab-diary" onclick="showPanel('diary')">Diary <span class="ct" id="ct-diary"></span></button>
-      <button class="ntab" id="ntab-prefs" onclick="showPanel('prefs')">&#9670; Taste</button>
+      <button class="ntab active" id="ntab-digest" onclick="showPanel('digest')">Digest</button>
+      <button class="ntab" id="ntab-foryou" onclick="showPanel('foryou')">For You</button>
+      <button class="ntab" id="ntab-plan" onclick="showPanel('plan')">Plan to See</button>
+      <button class="ntab" id="ntab-seen" onclick="showPanel('seen')">Seen</button>
     </div>
     <div class="nav-right">
-      <button class="btn-sec" id="refresh-btn" onclick="findEvents(true)" style="display:none">Refresh</button>
-      <button class="btn-pri" id="find-btn" onclick="findEvents(false)">Find events</button>
+      <button class="btn-sec" id="refresh-btn" style="display:none" onclick="handleRefresh()">Refresh</button>
+      <button class="btn-pri" id="action-btn" onclick="handleAction()">Get digest</button>
+      <button class="taste-btn" id="taste-btn" onclick="toggleTaste()" title="My taste">&#9670;</button>
     </div>
   </div>
 </nav>
 
+<!-- Sub-nav for For You filters -->
+<div class="subnav" id="subnav">
+  <div class="subnav-inner">
+    <button class="stab active" id="stab-all" onclick="setFilter('all')">All <span class="ct" id="ct-all"></span></button>
+    <button class="stab" id="stab-art" onclick="setFilter('art')">Art <span class="ct" id="ct-art"></span></button>
+    <button class="stab" id="stab-theatre" onclick="setFilter('theatre')">Theatre <span class="ct" id="ct-theatre"></span></button>
+    <button class="stab" id="stab-film" onclick="setFilter('film')">Film <span class="ct" id="ct-film"></span></button>
+    <button class="stab" id="stab-tv" onclick="setFilter('tv')">TV <span class="ct" id="ct-tv"></span></button>
+  </div>
+</div>
+
 <div class="infobar" id="infobar"></div>
+
+<!-- Taste panel (overlay) -->
+<div id="taste-panel" style="display:none;background:var(--bg);border-bottom:1px solid var(--border);padding:1.5rem;position:sticky;top:48px;z-index:15;max-height:70vh;overflow-y:auto">
+  <div class="prefs-grid">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-size:16px;font-weight:700">My taste</div>
+      <button onclick="toggleTaste()" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer">Done</button>
+    </div>
+    <div class="pg">
+      <div class="pl">What I love</div>
+      <div class="ph">Directors, artists, genres, themes, venues</div>
+      <textarea class="pi" id="pref-love">Slow cinema, arthouse films, character-driven drama, political theatre, documentary, strong writing, conceptual art, exhibitions with strong curatorial argument</textarea>
+    </div>
+    <div class="pg">
+      <div class="pl">What I dislike</div>
+      <textarea class="pi" id="pref-dislike">Horror, CGI-heavy blockbusters, reality TV, slapstick comedy, crowd-pleasing blockbuster exhibitions with no critical angle</textarea>
+    </div>
+    <div class="pg">
+      <div class="pl">Things I've loved recently</div>
+      <div class="ph">Films, shows, exhibitions, plays</div>
+      <textarea class="pi" id="pref-loved">Succession, All of Us Strangers, The Zone of Interest, The Lehman Trilogy, Tracey Emin at Tate Modern</textarea>
+    </div>
+    <div class="taste-learned" id="taste-learned"></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn-pri" onclick="savePrefs()">Save preferences</button>
+      <span id="prefs-ok" style="font-size:13px;color:var(--green);display:none">&#10003; Saved</span>
+    </div>
+    <div style="font-size:12px;color:var(--text3)">Saving clears the recommendation cache. Diary ratings automatically improve future recommendations.</div>
+  </div>
+</div>
 
 <div class="main">
   <div class="status-bar" id="status-bar"><div class="spinner" id="status-spin"></div><span id="status-txt"></span></div>
   <div class="prog" id="prog"><div class="prog-fill" id="prog-fill"></div></div>
 
-  <!-- Discover -->
-  <div class="panel active" id="panel-discover">
-    <div class="cards" id="recs-list"></div>
-    <div class="empty" id="recs-empty">
-      <div class="empty-icon">&#9675;</div>
-      <p>Press <strong>Find events</strong> to get 20 matched recommendations across art, theatre, film and TV.<br><br>Results cache for 24 hours.</p>
+  <!-- Digest -->
+  <div class="panel active" id="panel-digest">
+    <div id="digest-content">
+      <div class="digest-empty" id="digest-loading">
+        <div class="ei" style="animation:spin 1.2s linear infinite;display:inline-block">&#9675;</div>
+        <p style="margin-top:12px">Loading today's digest...</p>
+      </div>
     </div>
   </div>
 
-  <!-- Diary -->
-  <div class="panel" id="panel-diary">
-    <!-- Add form -->
-    <div class="add-form">
-      <h3>&#43; Add to diary</h3>
+  <!-- For You -->
+  <div class="panel" id="panel-foryou">
+    <div class="cards" id="recs-list"></div>
+    <div class="empty" id="recs-empty">
+      <div class="ei">&#9675;</div>
+      <p>Press <strong>Find events</strong> to get 20 matched recommendations.<br><br>Results cache for 24 hours.</p>
+    </div>
+  </div>
+
+  <!-- Plan to See -->
+  <div class="panel" id="panel-plan">
+    <div style="margin-bottom:16px">
+      <button class="btn-sec" id="add-toggle-btn" onclick="toggleAddForm()" style="display:flex;align-items:center;gap:6px;font-size:13px">
+        <span style="font-size:16px;line-height:1">+</span> Add event
+      </button>
+    </div>
+    <div class="add-form" id="add-form" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="font-size:14px;font-weight:700">Add to plan</h3>
+        <button onclick="toggleAddForm()" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer">&#10005;</button>
+      </div>
       <div class="form-row">
         <div class="fg"><label>Title</label><input type="text" id="add-title" placeholder="e.g. Hamlet at the National Theatre"></div>
         <div class="fg"><label>Category</label>
-          <select id="add-type">
-            <option value="art">Art</option>
-            <option value="theatre">Theatre</option>
-            <option value="film">Film</option>
-            <option value="tv">TV</option>
-          </select>
+          <select id="add-type"><option value="art">Art</option><option value="theatre">Theatre</option><option value="film">Film</option><option value="tv">TV</option></select>
         </div>
       </div>
       <div class="form-row">
@@ -193,71 +284,46 @@ textarea.pi:focus{outline:none;border-color:var(--text2)}
       </div>
       <div class="form-row single">
         <div class="fg">
-          <label>Notes <span style="color:var(--text3)">(leave blank and we'll write a description)</span></label>
+          <label>Notes <span style="color:var(--text3)">(leave blank — we'll write a description)</span></label>
           <textarea id="add-notes" placeholder="Optional..."></textarea>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-        <button class="btn-pri" id="add-btn" onclick="addManual()">Add to diary</button>
+        <button class="btn-pri" id="add-btn" onclick="addManual()">Add</button>
+        <button class="btn-sec" onclick="toggleAddForm()">Cancel</button>
         <span id="add-status" style="font-size:12px;color:var(--text3);font-family:sans-serif"></span>
       </div>
     </div>
-
-    <!-- Diary sub-tabs -->
-    <div class="diary-tabs">
-      <button class="dtab active" id="dtab-planning" onclick="setDiaryTab('planning')">Planning to see <span class="ct" id="dct-planning"></span></button>
-      <button class="dtab" id="dtab-seen" onclick="setDiaryTab('seen')">Seen <span class="ct" id="dct-seen"></span></button>
-    </div>
-
-    <div id="diary-planning-view"></div>
-    <div id="diary-seen-view" style="display:none"></div>
-    <div class="empty" id="diary-empty" style="display:none">
-      <div class="empty-icon">&#9645;</div>
-      <p>Nothing here yet. Save events from recommendations or add your own above.<br><br>Your diary syncs across all your devices.</p>
+    <div id="plan-list"></div>
+    <div class="empty" id="plan-empty">
+      <div class="ei">&#9645;</div>
+      <p>Events you save from recommendations will appear here.<br>Or add your own above.</p>
     </div>
   </div>
 
-  <!-- Prefs -->
-  <div class="panel" id="panel-prefs">
-    <div class="prefs-grid">
-      <div class="pg">
-        <div class="pl">What I love</div>
-        <div class="ph">Directors, artists, genres, themes, venues</div>
-        <textarea class="pi" id="pref-love">Slow cinema, arthouse films, character-driven drama, political theatre, documentary, strong writing, conceptual art, exhibitions with strong curatorial argument</textarea>
-      </div>
-      <div class="pg">
-        <div class="pl">What I dislike</div>
-        <textarea class="pi" id="pref-dislike">Horror, CGI-heavy blockbusters, reality TV, slapstick comedy, crowd-pleasing blockbuster exhibitions with no critical angle</textarea>
-      </div>
-      <div class="pg">
-        <div class="pl">Things I've loved recently</div>
-        <div class="ph">Films, shows, exhibitions, plays</div>
-        <textarea class="pi" id="pref-loved">Succession, All of Us Strangers, The Zone of Interest, The Lehman Trilogy, Tracey Emin at Tate Modern</textarea>
-      </div>
-      <div id="taste-learned" class="taste-learned" style="display:none"></div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="btn-pri" onclick="savePrefs()">Save preferences</button>
-        <span id="prefs-ok" style="font-size:13px;color:var(--green);display:none">&#10003; Saved</span>
-      </div>
-      <div style="font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:12px">
-        Saving preferences clears the recommendation cache. Your diary ratings automatically improve future recommendations.
-      </div>
+  <!-- Seen -->
+  <div class="panel" id="panel-seen">
+    <div id="seen-list"></div>
+    <div class="empty" id="seen-empty">
+      <div class="ei">&#10003;</div>
+      <p>Events you mark as seen will appear here, with your ratings.</p>
     </div>
   </div>
 </div>
 
 <script>
-var SK='curtain_v13';
+var SK='curtain_v14';
 var CACHE_MS=24*60*60*1000;
-var S={prefs:{love:'',dislike:'',loved:''},recs:[],cachedAt:null};
+var S={prefs:{love:'',dislike:'',loved:''},recs:[],recsAt:null,digest:'',digestAt:null};
 try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign(S,JSON.parse(_d));}catch(e){}
 function persist(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 function el(id){return document.getElementById(id);}
 function esc(s){return String(s||'').split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');}
 
+var currentPanel='digest';
 var currentFilter='all';
-var currentDiaryTab='planning';
 var diaryItems=[];
+var tasteOpen=false;
 
 // ── API ───────────────────────────────────────────────────────────────────────
 function api(body,cb){
@@ -276,78 +342,84 @@ window.addEventListener('DOMContentLoaded',function(){
   if(S.prefs.love) el('pref-love').value=S.prefs.love;
   if(S.prefs.dislike) el('pref-dislike').value=S.prefs.dislike;
   if(S.prefs.loved) el('pref-loved').value=S.prefs.loved;
+
+  // Load digest — from cache if fresh, otherwise fetch
+  if(S.digest&&S.digestAt&&(Date.now()-S.digestAt)<CACHE_MS){
+    renderDigest(S.digest,S.digestAt);
+  } else {
+    // Auto-fetch in background
+    setTimeout(function(){getDigest(false);},500);
+  }
+  // Load recs from cache
   if(S.recs&&S.recs.length){
     renderRecs(S.recs,currentFilter);
-    updateCacheInfo();
-    if(cacheIsStale()) setTimeout(function(){findEvents(false);},1000);
+    if(isStale(S.recsAt)) setTimeout(function(){findEvents(false);},1200);
   }
   loadDiary();
 });
 
-// ── Diary sync ────────────────────────────────────────────────────────────────
-function loadDiary(){
-  api({action:'diary_load'},function(err,data){
-    if(err||!Array.isArray(data)) return;
-    diaryItems=data;
-    updateDiaryBadge();
-    updateTasteLearned();
-    if(el('panel-diary').classList.contains('active')) renderDiary();
+function isStale(ts){return !ts||(Date.now()-ts)>CACHE_MS;}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function showPanel(id){
+  currentPanel=id;
+  ['digest','foryou','plan','seen'].forEach(function(p){
+    el('panel-'+p).classList.toggle('active',p===id);
+    el('ntab-'+p).classList.toggle('active',p===id);
   });
+  el('subnav').classList.toggle('show',id==='foryou');
+  updateActionBtn();
+  updateInfoBar();
+  if(id==='plan') renderPlan();
+  if(id==='seen') renderSeen();
 }
 
-function saveDiaryItem(item,cb){
-  api({action:'diary_save',item:item},function(err,data){
-    if(err){if(cb)cb(err,null);return;}
-    var saved=Array.isArray(data)?data[0]:data;
-    if(saved&&saved.id) diaryItems.unshift(saved);
-    updateDiaryBadge();
-    if(cb)cb(null,saved);
-  });
+function updateActionBtn(){
+  var btn=el('action-btn');
+  var rb=el('refresh-btn');
+  if(currentPanel==='foryou'){
+    btn.textContent='Find events';btn.style.display='inline-block';
+    rb.style.display=S.recsAt?'inline-block':'none';
+  } else if(currentPanel==='digest'){
+    btn.style.display='none';
+    rb.style.display=S.digestAt?'inline-block':'none';
+  } else {
+    btn.style.display='none';rb.style.display='none';
+  }
 }
 
-function updateDiaryItem(id,fields){
-  api({action:'diary_update',id:id,fields:fields},function(){});
-  var item=diaryItems.find(function(d){return d.id===id;});
-  if(item) Object.assign(item,fields);
-  updateTasteLearned();
+function handleAction(){
+  if(currentPanel==='foryou') findEvents(false);
+}
+function handleRefresh(){
+  if(currentPanel==='digest') getDigest(true);
+  else if(currentPanel==='foryou') findEvents(true);
 }
 
-function deleteDiaryItem(id){
-  api({action:'diary_delete',id:id},function(){});
-  diaryItems=diaryItems.filter(function(d){return d.id!==id;});
-  updateDiaryBadge();
-  updateTasteLearned();
-  renderDiary();
-}
-
-// ── Cache ─────────────────────────────────────────────────────────────────────
-function cacheIsStale(){return !S.cachedAt||(Date.now()-S.cachedAt)>CACHE_MS;}
-function updateCacheInfo(){
+function updateInfoBar(){
   var bar=el('infobar');
-  if(!S.cachedAt){bar.className='infobar';return;}
-  var age=Date.now()-S.cachedAt;
+  var ts=currentPanel==='digest'?S.digestAt:currentPanel==='foryou'?S.recsAt:null;
+  if(!ts){bar.className='infobar';return;}
+  var age=Date.now()-ts;
   var mins=Math.floor(age/60000),hrs=Math.floor(mins/60);
   var stale=age>CACHE_MS;
   var ageStr=hrs>0?(hrs+'h '+(mins%60)+'m ago'):(mins+'m ago');
   bar.className='infobar show '+(stale?'stale':'fresh');
-  bar.textContent=(stale?'⚠ Stale · ':' ✓ ')+S.recs.length+' events · updated '+ageStr;
-  el('refresh-btn').style.display='inline-block';
+  bar.textContent=(stale?'⚠ Stale · ':' ✓ ')+'Updated '+ageStr;
 }
 
-// ── Taste learning ────────────────────────────────────────────────────────────
-function getTasteFromDiary(){
-  var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
-  if(!seen.length) return '';
-  var loved=seen.filter(function(d){return d.rating>=4;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
-  var mixed=seen.filter(function(d){return d.rating===3;}).map(function(d){return d.title;});
-  var disliked=seen.filter(function(d){return d.rating<=2;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
-  var parts=[];
-  if(loved.length) parts.push('Loved: '+loved.join(', '));
-  if(mixed.length) parts.push('Mixed feelings: '+mixed.join(', '));
-  if(disliked.length) parts.push('Disappointed by: '+disliked.join(', '));
-  return parts.length?'\nLearned from diary: '+parts.join(' | '):'';
+// ── Taste panel ───────────────────────────────────────────────────────────────
+function toggleTaste(){
+  tasteOpen=!tasteOpen;
+  el('taste-panel').style.display=tasteOpen?'block':'none';
+  el('taste-btn').style.color=tasteOpen?'var(--text)':'var(--text3)';
+  if(tasteOpen) updateTasteLearned();
 }
-
+function getPrefs(){return{love:el('pref-love').value,dislike:el('pref-dislike').value,loved:el('pref-loved').value};}
+function savePrefs(){
+  S.prefs=getPrefs();S.recsAt=null;persist();
+  el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2000);
+}
 function updateTasteLearned(){
   var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
   var box=el('taste-learned');
@@ -355,52 +427,22 @@ function updateTasteLearned(){
   box.style.display='block';
   var loved=seen.filter(function(d){return d.rating>=4;});
   var disliked=seen.filter(function(d){return d.rating<=2;});
-  var lines=[];
+  var lines=['<strong style="font-size:10px;text-transform:uppercase;letter-spacing:.05em">Learned from diary</strong>'];
   if(loved.length) lines.push('&#10003; Loved: '+loved.map(function(d){return d.title;}).join(', '));
-  if(disliked.length) lines.push('&#8595; Enjoyed less: '+disliked.map(function(d){return d.title;}).join(', '));
-  box.innerHTML='<strong style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3)">Learned from your diary</strong><br>'+lines.join('<br>');
+  if(disliked.length) lines.push('&#8595; Less enjoyed: '+disliked.map(function(d){return d.title;}).join(', '));
+  box.innerHTML=lines.join('<br>');
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────────
-function showPanel(id){
-  ['discover','diary','prefs'].forEach(function(p){el('panel-'+p).classList.toggle('active',p===id);});
-  ['all','art','theatre','film','tv','diary','prefs'].forEach(function(t){
-    var tab=el('ntab-'+t);if(tab)tab.classList.remove('active');
-  });
-  if(id==='diary'){el('ntab-diary').classList.add('active');renderDiary();}
-  else if(id==='prefs'){el('ntab-prefs').classList.add('active');updateTasteLearned();}
-}
-
-function setFilter(type){
-  currentFilter=type;
-  ['all','art','theatre','film','tv'].forEach(function(t){
-    var tab=el('ntab-'+t);if(tab)tab.classList.toggle('active',t===type);
-  });
-  el('ntab-diary').classList.remove('active');
-  el('ntab-prefs').classList.remove('active');
-  ['discover','diary','prefs'].forEach(function(p){el('panel-'+p).classList.toggle('active',p==='discover');});
-  renderRecs(S.recs,type);
-}
-
-function setDiaryTab(tab){
-  currentDiaryTab=tab;
-  ['planning','seen'].forEach(function(t){
-    el('dtab-'+t).classList.toggle('active',t===tab);
-    el('diary-'+t+'-view').style.display=t===tab?'block':'none';
-  });
-}
-
-// ── Prefs ─────────────────────────────────────────────────────────────────────
-function getPrefs(){return{love:el('pref-love').value,dislike:el('pref-dislike').value,loved:el('pref-loved').value};}
-function savePrefs(){
-  S.prefs=getPrefs();S.cachedAt=null;persist();
-  el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2000);
-}
+// ── Diary context for prompts ──────────────────────────────────────────────────
 function getDiaryCtx(){
-  var learned=getTasteFromDiary();
-  var planning=diaryItems.filter(function(d){return !d.seen_at&&d.rating>0;});
-  var planningStr=planning.length?'\nPlanning to see and rated: '+planning.map(function(d){return d.title+' ('+d.rating+'/5)';}).join(', '):'';
-  return learned+planningStr;
+  var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
+  if(!seen.length) return '';
+  var loved=seen.filter(function(d){return d.rating>=4;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
+  var disliked=seen.filter(function(d){return d.rating<=2;}).map(function(d){return d.title+' ('+d.rating+'/5)';});
+  var parts=[];
+  if(loved.length) parts.push('Loved: '+loved.join(', '));
+  if(disliked.length) parts.push('Disappointed by: '+disliked.join(', '));
+  return parts.length?'\nLearned from diary: '+parts.join(' | '):'';
 }
 
 // ── Status ────────────────────────────────────────────────────────────────────
@@ -411,14 +453,76 @@ function setStatus(msg,type){
   spin.style.display=(type&&type!=='info')?'none':'block';
   txt.textContent=msg;
 }
-function setBusy(b){el('find-btn').disabled=b;if(el('refresh-btn'))el('refresh-btn').disabled=b;}
+function setBusy(b){el('action-btn').disabled=b;el('refresh-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
-// ── Find events — 4 calls, 5 each = 20 total ─────────────────────────────────
+// ── DIGEST ────────────────────────────────────────────────────────────────────
+function getDigest(force){
+  if(!force&&S.digest&&S.digestAt&&!isStale(S.digestAt)){renderDigest(S.digest,S.digestAt);return;}
+  // Only show status bar if user manually refreshed
+  if(force){setStatus('Refreshing digest...');}
+  el('refresh-btn').disabled=true;
+
+  var prompt='You are a UK arts and culture writer. Search the web and write a 650-word digest of the best new cultural events right now or coming up very soon in the UK.\n\n'
+    +'Cover: films, art exhibitions, theatre and TV. Focus on things getting 4 or 5 stars.\n\n'
+    +'Draw from: The Guardian, The Times, The Telegraph, The Arts Desk, BBC Culture, Time Out London, The Stage, The Reviews Hub.\n\n'
+    +'Include a few choice quotes from reviews (properly attributed). Write in an engaging, editorial voice — like a knowledgeable friend recommending things. Highlight what makes each thing worth seeing and when/where it is on.\n\n'
+    +'Format as flowing paragraphs with bold titles. No bullet points. No headers other than bolding the event name. Write approximately 650 words.';
+
+  api({
+    model:'claude-sonnet-4-6',
+    max_tokens:1200,
+    system:'You are an authoritative UK arts and culture writer with access to current web search results. Write in flowing, engaging prose.',
+    messages:[{role:'user',content:prompt}],
+    use_web_search:true
+  },function(err,data){
+    el('refresh-btn').disabled=false;
+    if(err||!data){
+      if(force) setStatus('Error loading digest — try again','err');
+      el('digest-loading') && (el('digest-loading').querySelector('p').textContent='Could not load digest — tap Refresh to try again.');
+      return;
+    }
+    if(data.error){
+      if(force) setStatus('Error: '+data.error,'err');
+      return;
+    }
+    var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
+    if(!text) return;
+    S.digest=text;S.digestAt=Date.now();persist();
+    renderDigest(text,S.digestAt);
+    updateInfoBar();updateActionBtn();
+    if(force){setStatus('Digest updated','ok');setTimeout(function(){setStatus('');},3000);}
+  });
+}
+
+function renderDigest(text,ts){
+  var d=new Date(ts);
+  var dateStr=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  // Convert text to HTML paragraphs
+  var paragraphs=text.split(/\n\n+/).map(function(p){
+    p=p.trim();
+    // Bold **text** or text already bold
+    p=p.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    p=p.replace(/\*(.*?)\*/g,'<em>$1</em>');
+    return p?'<p>'+p+'</p>':'';
+  }).join('');
+
+  el('digest-content').innerHTML=
+    '<div class="digest-header">'
+    +'<div class="digest-title">This week in culture</div>'
+    +'<div class="digest-date">'+esc(dateStr)+'</div>'
+    +'</div>'
+    +'<div class="digest-body">'+paragraphs+'</div>'
+    +'<div class="digest-sources">Sources: The Guardian &middot; The Times &middot; The Telegraph &middot; The Arts Desk &middot; BBC Culture &middot; Time Out London &middot; The Stage &middot; The Reviews Hub</div>';
+  updateActionBtn();
+  el('refresh-btn').style.display='inline-block';
+}
+
+// ── FOR YOU ───────────────────────────────────────────────────────────────────
 var CATALOGUE={
-  art:'Tracey Emin/Tate Modern (until Aug 2026, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), Hepworth in Colour/Courtauld (Jun-Sep, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), Ana Mendieta/Tate Modern (from Jul 9, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), Frida Kahlo/Tate Modern (from Jun 25, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), Hurvin Anderson/Tate Britain (until Aug 23, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/03/26/hurvin-anderson), Project a Black Planet/Barbican (Jun-Sep).',
-  theatre:'Glengarry Glen Ross/Old Vic (until Jul 18, bookingUrl:https://www.oldvictheatre.com), Arcadia/Duke of Yorks (Jun 20-Sep 12, bookingUrl:https://arcadiawestend.co.uk), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18), Hamlet/National Theatre (check listings).',
-  film:'I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now, bookingUrl:https://www.curzon.com), The Odyssey dir Christopher Nolan (Jul 17), My Fathers Island/Curzon (Jul 3), The Girls/BFI (Jul 10), Rosebush Pruning/MUBI (Jul 10).',
+  art:'Tracey Emin/Tate Modern (until Aug 2026, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), Hepworth in Colour/Courtauld (Jun-Sep, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), Ana Mendieta/Tate Modern (from Jul 9, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), Frida Kahlo/Tate Modern (from Jun 25, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), Hurvin Anderson/Tate Britain (until Aug 23), Project a Black Planet/Barbican (Jun-Sep).',
+  theatre:'Glengarry Glen Ross/Old Vic (until Jul 18), Arcadia/Duke of Yorks (Jun 20-Sep 12), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18), Patriots/Almeida (check listings).',
+  film:'I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now), The Odyssey dir Christopher Nolan (Jul 17), My Fathers Island/Curzon (Jul 3), The Girls/BFI (Jul 10), Rosebush Pruning/MUBI (Jul 10).',
   tv:'Half Man by Richard Gadd (BBC iPlayer and HBO, streaming now), Falling by Jack Thorne (Channel 4, now), Dirty Business docudrama (Channel 4), The Night Manager Series 2 (BBC iPlayer), Babies by Stefan Golaszewski (BBC iPlayer).'
 };
 
@@ -426,73 +530,67 @@ function buildPrompt(type,prefs){
   return 'Return a JSON array of exactly 5 UK '+type+' events for June-September 2026.\n'
     +'LOVES: '+prefs.love+'\nDISLIKES: '+prefs.dislike+getDiaryCtx()+'\n\n'
     +'Choose from: '+CATALOGUE[type]+'\n\n'
-    +'Each item must have exactly: title, type("'+type+'"), venue, location, dates, tags(array max 3), summary(one sentence tailored to their taste), press(short string), matchScore(integer 0-100), matchReason(one short sentence), artfundUrl(string or null), bookingUrl(string or null).\n'
-    +'Return ONLY the JSON array, nothing else.';
+    +'Each item: title, type("'+type+'"), venue, location, dates, tags(array max 3), summary(one sentence for their taste), press(short string), matchScore(integer 0-100), matchReason(short sentence), artfundUrl(string or null), bookingUrl(string or null).\n'
+    +'Return ONLY the JSON array.';
 }
 
 function callClaude(type,prefs,cb){
   api({
     model:'claude-sonnet-4-6',max_tokens:1500,
-    system:'Return ONLY a valid JSON array. No markdown, no backticks, no explanation. Start with [ and end with ].',
+    system:'Return ONLY a valid JSON array. No markdown, no backticks. Start [ end ].',
     messages:[{role:'user',content:buildPrompt(type,prefs)}]
   },function(err,data){
     if(err){cb(err,null);return;}
     if(data&&data.error){cb(new Error(data.error),null);return;}
     var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
     text=text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
-    try{cb(null,JSON.parse(text));}
-    catch(e){cb(new Error('Parse error: '+e.message),null);}
+    try{cb(null,JSON.parse(text));}catch(e){cb(new Error('Parse error'),null);}
   });
 }
 
-function findEvents(forceRefresh){
-  if(!forceRefresh&&S.recs&&S.recs.length&&!cacheIsStale()){renderRecs(S.recs,currentFilter);updateCacheInfo();return;}
+function findEvents(force){
+  if(!force&&S.recs&&S.recs.length&&!isStale(S.recsAt)){renderRecs(S.recs,currentFilter);return;}
   setBusy(true);setProg(5);el('recs-empty').style.display='none';
   var prefs=getPrefs();
   var results=[];
   var types=['art','theatre','film','tv'];
   var labels={art:'Art',theatre:'Theatre',film:'Film',tv:'TV'};
   var step=0;
-
   function next(){
     if(step>=4){
       setProg(null);setBusy(false);
-      S.recs=results;S.cachedAt=Date.now();persist();
-      renderRecs(results,currentFilter);updateCacheInfo();updateCounts(results);
-      setStatus('Loaded '+results.length+' events — cached for 24 hours','ok');
+      S.recs=results;S.recsAt=Date.now();persist();
+      renderRecs(results,currentFilter);updateCounts(results);updateInfoBar();updateActionBtn();
+      setStatus('Loaded '+results.length+' events — cached 24h','ok');
       setTimeout(function(){setStatus('');},5000);
       return;
     }
     var type=types[step];
-    setStatus('Finding '+labels[type]+' events ('+( step+1)+' of 4)...');
+    setStatus('Finding '+labels[type]+' events ('+(step+1)+' of 4)...');
     setProg(5+(step*22));
     callClaude(type,prefs,function(err,batch){
       if(!err&&batch) results=results.concat(batch);
-      else if(err) console.warn('Error for '+type+':',err.message);
-      step++;
-      // Small delay between calls to avoid rate limiting
-      setTimeout(next,300);
+      step++;setTimeout(next,300);
     });
   }
   next();
 }
 
-// ── Counts ────────────────────────────────────────────────────────────────────
+function setFilter(type){
+  currentFilter=type;
+  ['all','art','theatre','film','tv'].forEach(function(t){
+    var s=el('stab-'+t);if(s)s.classList.toggle('active',t===type);
+  });
+  renderRecs(S.recs,type);
+}
+
 function updateCounts(recs){
   var c={art:0,theatre:0,film:0,tv:0},total=0;
   (recs||[]).forEach(function(e){if(c[e.type]!==undefined)c[e.type]++;});
   Object.keys(c).forEach(function(t){total+=c[t];var e2=el('ct-'+t);if(e2)e2.textContent=c[t]||'';});
   var all=el('ct-all');if(all)all.textContent=total||'';
 }
-function updateDiaryBadge(){
-  var planning=diaryItems.filter(function(d){return !d.seen_at;}).length;
-  var seen=diaryItems.filter(function(d){return d.seen_at;}).length;
-  var ct=el('ct-diary');if(ct)ct.textContent=diaryItems.length||'';
-  var dcp=el('dct-planning');if(dcp)dcp.textContent=planning||'';
-  var dcs=el('dct-seen');if(dcs)dcs.textContent=seen||'';
-}
 
-// ── Render recs ───────────────────────────────────────────────────────────────
 var TC={art:'#b05030',theatre:'#6030a0',film:'#1060a0',tv:'#108050'};
 var TBG={art:'#fef0ea',theatre:'#f3eef9',film:'#e8f0fa',tv:'#eafaf2'};
 var TL={art:'Art exhibitions',theatre:'Theatre',film:'Film',tv:'TV & streaming'};
@@ -508,7 +606,7 @@ function renderRecs(recs,filter){
   list.innerHTML='';
   if(!recs||!recs.length){empty.style.display='block';return;}
   var filtered=filter&&filter!=='all'?recs.filter(function(e){return e.type===filter;}):recs;
-  if(!filtered.length){empty.style.display='block';empty.querySelector('p').textContent='No events in this category yet — press Find events.';return;}
+  if(!filtered.length){empty.style.display='block';empty.querySelector('p').textContent='No events in this category — press Find events.';return;}
   empty.style.display='none';
   updateCounts(recs);
   if(!filter||filter==='all'){
@@ -562,150 +660,161 @@ function makeCard(ev,i){
   return card;
 }
 
-// ── Diary ─────────────────────────────────────────────────────────────────────
-function renderDiary(){
-  var planningView=el('diary-planning-view');
-  var seenView=el('diary-seen-view');
-  var empty=el('diary-empty');
-  planningView.innerHTML='';seenView.innerHTML='';
-
-  var planning=diaryItems.filter(function(d){return !d.seen_at;});
-  var seen=diaryItems.filter(function(d){return !!d.seen_at;});
-
-  updateDiaryBadge();
-
-  if(!planning.length&&!seen.length){
-    empty.style.display='block';
-    planningView.style.display='none';
-    seenView.style.display='none';
-    return;
-  }
-  empty.style.display='none';
-
-  // Planning view
-  if(!planning.length){
-    planningView.innerHTML='<div class="empty" style="padding:2rem"><p>Nothing planned yet. Save events or add your own above.</p></div>';
-  } else {
-    var recs=planning.filter(function(d){return d.source==='rec';});
-    var manual=planning.filter(function(d){return d.source==='manual';});
-    if(recs.length){
-      planningView.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>');
-      recs.forEach(function(item){planningView.appendChild(makeDiaryCard(item));});
-    }
-    if(manual.length){
-      planningView.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--blue)">Added manually</div>');
-      manual.forEach(function(item){planningView.appendChild(makeDiaryCard(item));});
-    }
-  }
-
-  // Seen view
-  if(!seen.length){
-    seenView.innerHTML='<div class="empty" style="padding:2rem"><p>Nothing marked as seen yet.</p></div>';
-  } else {
-    seen.forEach(function(item){seenView.appendChild(makeDiaryCard(item));});
-  }
-
-  // Make sure correct tab view is showing
-  el('diary-planning-view').style.display=currentDiaryTab==='planning'?'block':'none';
-  el('diary-seen-view').style.display=currentDiaryTab==='seen'?'block':'none';
+// ── DIARY SYNC ────────────────────────────────────────────────────────────────
+function loadDiary(){
+  api({action:'diary_load'},function(err,data){
+    if(err||!Array.isArray(data)) return;
+    diaryItems=data;
+    if(el('panel-plan').classList.contains('active')) renderPlan();
+    if(el('panel-seen').classList.contains('active')) renderSeen();
+  });
 }
 
+function saveDiaryItem(item,cb){
+  api({action:'diary_save',item:item},function(err,data){
+    if(err){if(cb)cb(err);return;}
+    var saved=Array.isArray(data)?data[0]:data;
+    if(saved&&saved.id) diaryItems.unshift(saved);
+    if(cb)cb(null,saved);
+  });
+}
+
+function updateDiaryItem(id,fields){
+  api({action:'diary_update',id:id,fields:fields},function(){});
+  var item=diaryItems.find(function(d){return d.id===id;});
+  if(item) Object.assign(item,fields);
+  updateTasteLearned();
+}
+
+function deleteDiaryItem(id){
+  api({action:'diary_delete',id:id},function(){});
+  diaryItems=diaryItems.filter(function(d){return d.id!==id;});
+  renderPlan();renderSeen();
+}
+
+// ── PLAN TO SEE ───────────────────────────────────────────────────────────────
+function renderPlan(){
+  var list=el('plan-list'),empty=el('plan-empty');
+  list.innerHTML='';
+  var items=diaryItems.filter(function(d){return !d.seen_at;});
+  if(!items.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  var recs=items.filter(function(d){return d.source==='rec';});
+  var manual=items.filter(function(d){return d.source!=='rec';});
+  if(recs.length){
+    list.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>');
+    recs.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+  }
+  if(manual.length){
+    list.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--blue)">Added manually</div>');
+    manual.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+  }
+}
+
+// ── SEEN ──────────────────────────────────────────────────────────────────────
+function renderSeen(){
+  var list=el('seen-list'),empty=el('seen-empty');
+  list.innerHTML='';
+  var items=diaryItems.filter(function(d){return !!d.seen_at;});
+  if(!items.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  items.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+}
+
+// ── DIARY CARD ────────────────────────────────────────────────────────────────
 function makeDiaryCard(item){
   var c=document.createElement('div');
   var isSeen=!!item.seen_at;
-  c.className='dcard'+(item.source==='manual'?' manual':'')+(isSeen?' seen-card':'');
+  c.className='dcard'+(item.source!=='rec'?' manual':'')+(isSeen?' seen-card':'');
   var tc=TC[item.type]||'#888';
   var stars=[1,2,3,4,5].map(function(n){
     return'<span class="star'+(item.rating>=n?' lit':'')+'" data-id="'+item.id+'" data-n="'+n+'">&#9733;</span>';
   }).join('');
-  var seenDateStr=isSeen?'<span class="seen-date">&#10003; Seen '+new Date(item.seen_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</span>':'';
+  var seenStr=isSeen?'<span class="seen-date">Seen '+new Date(item.seen_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</span>':'';
   c.innerHTML='<div style="display:flex;justify-content:space-between;align-items:start;gap:12px"><div style="flex:1">'
     +'<div style="font-size:16px;font-weight:700">'+esc(item.title)+'</div>'
-    +'<div style="font-size:12px;color:'+tc+';margin-top:3px">'+esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
+    +'<div style="font-size:12px;color:'+tc+';margin-top:3px;font-family:sans-serif">'+esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
     +(item.summary?'<div class="dsummary">'+esc(item.summary)+'</div>':'')
     +'<div class="stars">'+stars+'</div>'
-    +'<textarea class="dnote" placeholder="Your notes..." data-id="'+item.id+'">'+esc(item.note||'')+'</textarea>'
+    +'<textarea class="dnote" placeholder="'+(isSeen?'Post-visit notes...':'Notes...')+'" data-id="'+item.id+'">'+esc(item.note||'')+'</textarea>'
+    +(isSeen?'<textarea class="dnote" style="margin-top:6px" placeholder="Further comments..." data-id="'+item.id+'" data-field="note2">'+esc(item.note2||'')+'</textarea>':'')
     +'<div class="dcard-actions">'
     +(isSeen
-      ? seenDateStr+'<button class="btn-sm" data-id="'+item.id+'" onclick="markUnseen(this)">Move back to planning</button>'
+      ? seenStr+'<button class="btn-sm" data-id="'+item.id+'" onclick="markUnseen(this)">Move back to plan</button>'
       : '<button class="btn-sm seen" data-id="'+item.id+'" onclick="markSeen(this)">&#10003; Mark as seen</button>')
     +'</div>'
     +'</div>'
-    +'<button class="rem-btn" data-id="'+item.id+'" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px">&#10005;</button>'
+    +'<button data-id="'+item.id+'" class="rem" style="font-size:13px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px">&#10005;</button>'
     +'</div>';
   c.querySelectorAll('.star').forEach(function(s){
     s.addEventListener('click',function(){
-      var id=this.dataset.id,n=+this.dataset.n;
-      updateDiaryItem(id,{rating:n});
-      renderDiary();
+      updateDiaryItem(this.dataset.id,{rating:+this.dataset.n});
+      renderPlan();renderSeen();
     });
   });
-  c.querySelector('.dnote').addEventListener('change',function(){
-    updateDiaryItem(this.dataset.id,{note:this.value});
+  c.querySelectorAll('.dnote').forEach(function(t){
+    t.addEventListener('change',function(){
+      var field=this.dataset.field||'note';
+      var fields={};fields[field]=this.value;
+      updateDiaryItem(this.dataset.id,fields);
+    });
   });
-  c.querySelector('.rem-btn').addEventListener('click',function(){
-    deleteDiaryItem(this.dataset.id);
-  });
+  c.querySelector('.rem').addEventListener('click',function(){deleteDiaryItem(this.dataset.id);});
   return c;
 }
 
 function markSeen(btn){
-  var id=btn.dataset.id;
-  var now=new Date().toISOString();
+  var id=btn.dataset.id,now=new Date().toISOString();
   updateDiaryItem(id,{seen_at:now});
   var item=diaryItems.find(function(d){return d.id===id;});
   if(item) item.seen_at=now;
-  updateDiaryBadge();
-  updateTasteLearned();
-  renderDiary();
-  // Switch to seen tab
-  setDiaryTab('seen');
+  renderPlan();renderSeen();
+  showPanel('seen');
 }
-
 function markUnseen(btn){
   var id=btn.dataset.id;
   updateDiaryItem(id,{seen_at:null});
   var item=diaryItems.find(function(d){return d.id===id;});
   if(item) item.seen_at=null;
-  updateDiaryBadge();
-  updateTasteLearned();
-  renderDiary();
-  setDiaryTab('planning');
+  renderPlan();renderSeen();
+  showPanel('plan');
 }
 
-// ── Add manual ────────────────────────────────────────────────────────────────
+// ── ADD MANUAL ────────────────────────────────────────────────────────────────
+function toggleAddForm(){
+  var form=el('add-form');
+  var btn=el('add-toggle-btn');
+  var open=form.style.display==='none';
+  form.style.display=open?'block':'none';
+  btn.style.display=open?'none':'flex';
+  if(open) el('add-title').focus();
+}
+
 function addManual(){
   var title=el('add-title').value.trim();
   if(!title){el('add-title').focus();return;}
   var notes=el('add-notes').value.trim();
-  var btn=el('add-btn');
-  var status=el('add-status');
+  var btn=el('add-btn'),status=el('add-status');
   btn.disabled=true;
-
   function doSave(note){
     saveDiaryItem({
       title:title,type:el('add-type').value,
-      venue:el('add-venue').value.trim(),
-      dates:el('add-dates').value.trim(),
-      note:note,summary:'',press:'',matchReason:'',
-      rating:0,source:'manual'
+      venue:el('add-venue').value.trim(),dates:el('add-dates').value.trim(),
+      note:note,summary:'',press:'',matchReason:'',rating:0,source:'manual'
     },function(){
       btn.disabled=false;status.textContent='';
-      el('add-title').value='';el('add-venue').value='';
-      el('add-dates').value='';el('add-notes').value='';
-      renderDiary();
-      setDiaryTab('planning');
+      el('add-title').value='';el('add-venue').value='';el('add-dates').value='';el('add-notes').value='';
+      el('add-form').style.display='none';
+      el('add-toggle-btn').style.display='flex';
+      renderPlan();
     });
   }
-
   if(!notes){
-    status.textContent='Writing a description...';
+    status.textContent='Writing description...';
     api({action:'diary_autofill',title:title,type:el('add-type').value},function(err,data){
       doSave((data&&data.description)||'');
     });
-  } else {
-    doSave(notes);
-  }
+  } else { doSave(notes); }
 }
 </script>
 </body>
