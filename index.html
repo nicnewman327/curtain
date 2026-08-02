@@ -257,7 +257,9 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
     <div id="digest-content">
       <div class="digest-empty">
         <div class="ei" style="font-size:36px;margin-bottom:12px;opacity:.4">&#9675;</div>
-        <p>No digest yet. Press <strong>Refresh digest</strong> above to fetch the latest reviews from The Guardian, Times, Telegraph, Time Out and more.<br><br>Takes about 20 seconds and is cached for a week.</p>
+        <p>No digest yet.</p>
+        <button onclick="refreshDigest()" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Get this week&#39;s digest</button>
+        <p style="margin-top:1rem;font-size:13px;color:var(--text3)">Searches The Guardian, Times, Telegraph, Time Out and more.<br>Takes about 20 seconds. Cached for a week.</p>
       </div>
     </div>
   </div>
@@ -268,7 +270,9 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
     <div class="cards" id="recs-list"></div>
     <div class="empty" id="recs-empty">
       <div class="ei">&#9675;</div>
-      <p>Press <strong>Find events</strong> above to get matched recommendations.<br><br>Cached for 7 days.</p>
+      <p>No recommendations yet.</p>
+      <button onclick="findEvents()" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Find events</button>
+      <p style="margin-top:1rem;font-size:13px;color:var(--text3)">Matched to your taste across art, theatre, film and TV.<br>Cached for 7 days.</p>
     </div>
   </div>
 
@@ -357,10 +361,17 @@ window.addEventListener('DOMContentLoaded',function(){
   if(S.prefs.love) el('pref-love').value=S.prefs.love;
   if(S.prefs.dislike) el('pref-dislike').value=S.prefs.dislike;
   if(S.prefs.loved) el('pref-loved').value=S.prefs.loved;
-  loadDiary();
-  if(S.recs&&S.recs.length) renderRecs(S.recs,currentFilter);
-  loadDigestFromSupabase();
+  // Always show cached recs immediately — no waiting
+  if(S.recs&&S.recs.length){
+    renderRecs(S.recs,currentFilter);
+    updateCounts(S.recs);
+  }
+  // Always show panel status immediately
   updatePanelStatus();
+  // Load diary (free Supabase read)
+  loadDiary();
+  // Load digest from Supabase (free read, no AI)
+  loadDigestFromSupabase();
 });
 
 // ── Digest ────────────────────────────────────────────────────────────────────
@@ -427,45 +438,37 @@ function renderDigest(text,ts){
 
 // ── Panel status lines (inside each panel, not nav) ───────────────────────────
 function updatePanelStatus(override){
-  // Digest status
+  // Digest status — always visible
   var ds=el('digest-status');
   if(ds){
+    ds.style.display='flex';
     if(override){
-      ds.style.display='flex';ds.className='panel-status info';
-      ds.innerHTML='<span>'+override+'</span>';
+      ds.className='panel-status info';
+      ds.innerHTML='<div class="spinner"></div><span>'+override+'</span>';
     } else if(digestAt){
       var stale=isStale(digestAt);
-      ds.style.display='flex';
       ds.className='panel-status '+(stale?'stale':'fresh');
       ds.innerHTML=(stale?'&#9888; ':'&#10003; ')+'Digest updated '+ageStr(digestAt)
         +' &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Refresh digest</a>';
     } else {
-      ds.style.display='flex';ds.className='panel-status stale';
-      ds.innerHTML='No digest yet &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Get this week\'s digest</a>';
+      ds.className='panel-status stale';
+      ds.innerHTML='&#9888; No digest yet &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Get this week's digest</a>';
     }
   }
-  // For You status
+  // For You status — always visible
   var fs=el('foryou-status');
   if(fs){
+    fs.style.display='flex';
     if(S.recs&&S.recs.length&&S.recsAt){
       var stale2=isStale(S.recsAt);
-      fs.style.display='flex';
       fs.className='panel-status '+(stale2?'stale':'fresh');
       fs.innerHTML=(stale2?'&#9888; ':'&#10003; ')+'Recommendations updated '+ageStr(S.recsAt)
         +' &nbsp;&middot;&nbsp; <a onclick="findEvents()">Refresh events</a>';
     } else {
-      fs.style.display='flex';fs.className='panel-status stale';
-      fs.innerHTML='No recommendations yet &nbsp;&middot;&nbsp; <a onclick="findEvents()">Find events</a>';
+      fs.className='panel-status stale';
+      fs.innerHTML='&#9888; No recommendations yet &nbsp;&middot;&nbsp; <a onclick="findEvents()">Find events</a>';
     }
   }
-}
-
-// ── For You ───────────────────────────────────────────────────────────────────
-var CATALOGUE={
-  art:'Tracey Emin/Tate Modern (until Aug 2026, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), Hepworth in Colour/Courtauld (Jun-Sep, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), Ana Mendieta/Tate Modern (from Jul 9, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), Frida Kahlo/Tate Modern (from Jun 25, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), Hurvin Anderson/Tate Britain (until Aug 23), Project a Black Planet/Barbican (Jun-Sep).',
-  theatre:'Glengarry Glen Ross/Old Vic (until Jul 18), Arcadia/Duke of Yorks (Jun 20-Sep 12), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18).',
-  film:'I See Buildings Fall Like Lightning dir Clio Barnard (Cannes Audience Award, Curzon now), The Odyssey dir Christopher Nolan (Jul 17), My Fathers Island/Curzon (Jul 3), The Girls/BFI (Jul 10), Rosebush Pruning/MUBI (Jul 10).',
-  tv:'Half Man by Richard Gadd (BBC iPlayer and HBO, streaming now), Falling by Jack Thorne (Channel 4, now), Dirty Business/Channel 4, The Night Manager Series 2/BBC iPlayer, Babies/BBC iPlayer.'
 };
 
 function buildPrompt(type,prefs){
