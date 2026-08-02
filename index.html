@@ -461,6 +461,7 @@ function updatePanelStatus(override){
     } else {
       ds.className='panel-status stale';
       ds.innerHTML='&#9888; No digest yet &nbsp;&middot;&nbsp; <a id="ds-nodigest2" style="cursor:pointer">Get this week's digest</a>';
+      setTimeout(function(){var x=document.getElementById('ds-nodigest2');if(x)x.onclick=refreshDigest;},0);
     }
   }
   // For You status — always visible
@@ -968,4 +969,3 @@ function addManual(){
 </div>
 </body>
 </html>
-      setTimeout(function(){var x=document.getElementById('ds-nodigest2');if(x)x.addEventListener('click',refreshDigest);},0);
