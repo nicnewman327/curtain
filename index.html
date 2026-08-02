@@ -28,6 +28,7 @@
   --red:#c45050;--red-bg:#2a0e0e;
 }}
 body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;min-height:100vh}
+/* Nav */
 .topnav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
 .topnav-inner{display:flex;align-items:center;padding:0 1.25rem;overflow-x:auto;scrollbar-width:none}
 .topnav-inner::-webkit-scrollbar{display:none}
@@ -39,14 +40,9 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
 .nav-right{display:flex;align-items:center;gap:8px;padding-left:.75rem;margin-left:auto;flex-shrink:0}
-.btn-pri{font-size:13px;padding:7px 15px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700;transition:opacity .15s;white-space:nowrap}
-.btn-pri:hover{opacity:.82}
-.btn-pri:disabled{opacity:.35;cursor:default}
 .btn-sec{font-size:12px;padding:6px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap}
 .btn-sec:hover{background:var(--bg3)}
-.btn-sm{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:inherit;white-space:nowrap;transition:all .12s}
-.btn-sm:hover{background:var(--bg2)}
-.btn-sm.seen{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+/* Sub-nav */
 .subnav{background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;display:none}
 .subnav::-webkit-scrollbar{display:none}
 .subnav.show{display:block}
@@ -55,37 +51,42 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .stab:hover{color:var(--text)}
 .stab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600}
 .stab .ct{display:inline-block;background:var(--bg3);border-radius:99px;font-size:10px;padding:1px 5px;margin-left:3px;font-weight:normal}
-.cache-bar{padding:.5rem 1.5rem;border-bottom:1px solid var(--border);font-size:11px;font-family:sans-serif;display:none;align-items:center;gap:10px}
-.cache-bar.show{display:flex}
-.cache-bar.fresh{color:var(--green)}
-.cache-bar.stale{color:var(--amber)}
-.main{max-width:820px;margin:0 auto;padding:1.75rem 1.5rem}
-@media(max-width:600px){.main{padding:1.1rem 1rem}.nav-right .btn-sec{display:none}.ntab{padding:.9rem .7rem;font-size:13px}}
-.status-bar{display:none;align-items:center;gap:9px;font-size:13px;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);margin-bottom:16px}
+/* Main */
+.main{max-width:820px;margin:0 auto;padding:1.5rem}
+@media(max-width:600px){.main{padding:1rem}.ntab{padding:.9rem .7rem;font-size:13px}}
+/* Status */
+.status-bar{display:none;align-items:center;gap:9px;font-size:13px;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);margin-bottom:14px}
 .status-bar.show{display:flex}
 .status-bar.ok{color:var(--green);border-color:var(--green-bg);background:var(--green-bg)}
 .status-bar.err{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}
 .status-bar.info{color:var(--text2);border-color:var(--border);background:var(--bg2)}
 .spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:16px}
+.prog{height:3px;background:var(--border);border-radius:99px;overflow:hidden;display:none;margin-bottom:14px}
 .prog-fill{height:100%;background:var(--green);border-radius:99px;width:0%;transition:width .4s}
+/* Panel */
 .panel{display:none}
 .panel.active{display:block}
+/* Cache status line — shown inside each panel */
+.panel-status{font-size:12px;color:var(--text3);font-family:sans-serif;margin-bottom:1.2rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.panel-status.fresh{color:var(--green)}
+.panel-status.stale{color:var(--amber)}
+.panel-status a{color:inherit;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:sans-serif;font-size:12px;padding:0}
+.panel-status a:hover{opacity:.7}
+/* Section headers */
+.section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px;font-family:sans-serif}
+.section-hdr:first-child{margin-top:0}
 /* Digest */
-.digest-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;gap:12px;flex-wrap:wrap}
+.digest-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.4rem;gap:12px;flex-wrap:wrap}
 .digest-title{font-size:22px;font-weight:700;letter-spacing:-.02em}
 .digest-meta{font-size:12px;color:var(--text3);font-family:sans-serif}
 .digest-body{font-size:15px;line-height:1.85;color:var(--text)}
 .digest-body p{margin-bottom:1.1rem}
 .digest-body p:last-child{margin-bottom:0}
 .digest-sources{font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
-.digest-empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
 .digest-empty .ei{font-size:36px;margin-bottom:12px;opacity:.4}
-.digest-empty p{font-size:14px;line-height:1.6}
-/* Cards */
-.section-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 12px;font-family:sans-serif}
-.section-hdr:first-child{margin-top:0}
+.digest-empty p{font-size:14px;line-height:1.6;color:var(--text3)}
+/* Event cards */
 .cards{display:flex;flex-direction:column;gap:12px}
 .ecard{border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem;background:var(--bg);transition:border-color .12s}
 .ecard:hover{border-color:var(--border2)}
@@ -102,14 +103,19 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .eaf{font-size:12px;margin-top:6px;font-family:sans-serif}
 .eaf a{color:var(--green);text-decoration:none}
 .eaf a:hover{text-decoration:underline}
-.score-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:60px}
+.score-col{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:60px}
 .score-n{font-size:24px;font-weight:700;line-height:1}
 .score-sm{font-size:11px;font-weight:normal;color:var(--text3)}
 .score-l{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;font-family:sans-serif}
-.btn-save{font-size:12px;padding:5px 11px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap;transition:all .12s}
+.card-btns{display:flex;flex-direction:column;gap:5px;align-items:flex-end;margin-top:6px}
+.btn-save{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap;transition:all .12s}
 .btn-save:hover{background:var(--bg2)}
 .btn-save.saved{color:var(--green);border-color:var(--green)}
-.book-link{font-size:12px;color:var(--text3);text-decoration:none;display:block;text-align:right;font-family:sans-serif}
+.btn-dismiss{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text3);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap}
+.btn-dismiss:hover{color:var(--red);border-color:var(--red)}
+.btn-more{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--blue);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap}
+.btn-more:hover{background:var(--blue-bg)}
+.book-link{font-size:11px;color:var(--text3);text-decoration:none;display:block;text-align:right;font-family:sans-serif}
 .book-link:hover{color:var(--text)}
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;vertical-align:middle;font-family:sans-serif}
 .badge-top{background:var(--amber-bg);color:var(--amber)}
@@ -125,6 +131,10 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .dnote{font-size:13px;margin-top:8px;padding:8px 11px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;width:100%;resize:none;min-height:46px}
 .dcard-actions{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
 .seen-date{font-size:11px;color:var(--green);font-family:sans-serif}
+.btn-sm{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:sans-serif;white-space:nowrap;transition:all .12s}
+.btn-sm:hover{background:var(--bg2)}
+.btn-sm.seen{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+/* Add form */
 .add-toggle{margin-bottom:16px}
 .add-form{border:1px dashed var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:16px;background:var(--bg2);display:none}
 .add-form.open{display:block}
@@ -146,6 +156,9 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);font-size:
 .ph{font-size:12px;color:var(--text3)}
 textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-family:Georgia,serif;resize:vertical;min-height:76px;width:100%}
 .taste-learned{font-size:12px;color:var(--text3);padding:9px 12px;background:var(--bg3);border-radius:var(--rs);line-height:1.6;display:none}
+.btn-pri{font-size:13px;padding:7px 15px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700;transition:opacity .15s}
+.btn-pri:hover{opacity:.82}
+.btn-pri:disabled{opacity:.35;cursor:default}
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
 .empty .ei{font-size:36px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:14px;line-height:1.6}
@@ -166,25 +179,43 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
       <button class="ntab" id="ntab-seen" onclick="showPanel('seen')">Seen</button>
     </div>
     <div class="nav-right">
-      <button class="btn-sec" id="main-btn" onclick="handleMainBtn()" style="display:none">Refresh</button>
-      <button class="btn-sec" id="taste-btn" onclick="toggleTaste()">&#9670; Taste</button>
+      <button class="ntab" id="ntab-taste" onclick="toggleTaste()" style="border-bottom:none;font-size:13px">&#9670; Taste</button>
     </div>
   </div>
 </nav>
 
 <!-- For You sub-filters -->
-<div class="subnav" id="subnav">
+<div class="subnav" id="subnav-foryou" style="display:none">
   <div class="subnav-inner">
     <button class="stab active" id="stab-all" onclick="setFilter('all')">All <span class="ct" id="ct-all"></span></button>
+    <button class="stab" id="stab-tv" onclick="setFilter('tv')">TV <span class="ct" id="ct-tv"></span></button>
+    <button class="stab" id="stab-film" onclick="setFilter('film')">Film <span class="ct" id="ct-film"></span></button>
     <button class="stab" id="stab-art" onclick="setFilter('art')">Art <span class="ct" id="ct-art"></span></button>
     <button class="stab" id="stab-theatre" onclick="setFilter('theatre')">Theatre <span class="ct" id="ct-theatre"></span></button>
-    <button class="stab" id="stab-film" onclick="setFilter('film')">Film <span class="ct" id="ct-film"></span></button>
-    <button class="stab" id="stab-tv" onclick="setFilter('tv')">TV <span class="ct" id="ct-tv"></span></button>
   </div>
 </div>
 
-<!-- Cache age bar -->
-<div class="cache-bar" id="cache-bar"></div>
+<!-- Plan to See sub-filters -->
+<div class="subnav" id="subnav-plan" style="display:none">
+  <div class="subnav-inner">
+    <button class="stab active" id="pstab-all" onclick="setPlanFilter('all')">All</button>
+    <button class="stab" id="pstab-tv" onclick="setPlanFilter('tv')">TV</button>
+    <button class="stab" id="pstab-film" onclick="setPlanFilter('film')">Film</button>
+    <button class="stab" id="pstab-art" onclick="setPlanFilter('art')">Art</button>
+    <button class="stab" id="pstab-theatre" onclick="setPlanFilter('theatre')">Theatre</button>
+  </div>
+</div>
+
+<!-- Seen sub-filters -->
+<div class="subnav" id="subnav-seen" style="display:none">
+  <div class="subnav-inner">
+    <button class="stab active" id="sstab-all" onclick="setSeenFilter('all')">All</button>
+    <button class="stab" id="sstab-tv" onclick="setSeenFilter('tv')">TV</button>
+    <button class="stab" id="sstab-film" onclick="setSeenFilter('film')">Film</button>
+    <button class="stab" id="sstab-art" onclick="setSeenFilter('art')">Art</button>
+    <button class="stab" id="sstab-theatre" onclick="setSeenFilter('theatre')">Theatre</button>
+  </div>
+</div>
 
 <!-- Taste panel -->
 <div class="taste-panel" id="taste-panel">
@@ -222,27 +253,29 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
 
   <!-- Digest -->
   <div class="panel active" id="panel-digest">
+    <div id="digest-status" class="panel-status" style="display:none"></div>
     <div id="digest-content">
       <div class="digest-empty">
-        <div class="ei">&#9675;</div>
-        <p>No digest yet.<br><br>Press <strong>Refresh</strong> to fetch the latest reviews from The Guardian, Times, Telegraph, Time Out and more.<br><br>Takes about 20 seconds. Updated weekly.</p>
+        <div class="ei" style="font-size:36px;margin-bottom:12px;opacity:.4">&#9675;</div>
+        <p>No digest yet. Press <strong>Refresh digest</strong> above to fetch the latest reviews from The Guardian, Times, Telegraph, Time Out and more.<br><br>Takes about 20 seconds and is cached for a week.</p>
       </div>
     </div>
   </div>
 
   <!-- For You -->
   <div class="panel" id="panel-foryou">
+    <div id="foryou-status" class="panel-status" style="display:none"></div>
     <div class="cards" id="recs-list"></div>
     <div class="empty" id="recs-empty">
       <div class="ei">&#9675;</div>
-      <p>Press <strong>Find events</strong> to get matched recommendations across art, theatre, film and TV.<br><br>Cached for 7 days — only costs API credits when you explicitly refresh.</p>
+      <p>Press <strong>Find events</strong> above to get matched recommendations.<br><br>Cached for 7 days.</p>
     </div>
   </div>
 
   <!-- Plan to See -->
   <div class="panel" id="panel-plan">
     <div class="add-toggle">
-      <button class="btn-sec" id="add-toggle-btn" onclick="toggleAddForm()">+ Add event</button>
+      <button class="btn-sec" onclick="toggleAddForm()">+ Add event</button>
     </div>
     <div class="add-form" id="add-form">
       <div class="add-form-header">
@@ -252,7 +285,7 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
       <div class="form-row">
         <div class="fg"><label>Title</label><input type="text" id="add-title" placeholder="e.g. Hamlet at the National Theatre"></div>
         <div class="fg"><label>Category</label>
-          <select id="add-type"><option value="art">Art</option><option value="theatre">Theatre</option><option value="film">Film</option><option value="tv">TV</option></select>
+          <select id="add-type"><option value="tv">TV</option><option value="film">Film</option><option value="art">Art</option><option value="theatre">Theatre</option></select>
         </div>
       </div>
       <div class="form-row">
@@ -274,7 +307,7 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
     <div id="plan-list"></div>
     <div class="empty" id="plan-empty">
       <div class="ei">&#9645;</div>
-      <p>Events you save from recommendations will appear here.<br>Or add your own above.</p>
+      <p>Events you save from recommendations will appear here. Or add your own above.</p>
     </div>
   </div>
 
@@ -289,111 +322,88 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
 </div>
 
 <script>
-// ── State — 7-day cache for everything ────────────────────────────────────────
-var SK='curtain_v15';
+var SK='curtain_v16';
 var WEEK=7*24*60*60*1000;
-var S={prefs:{love:'',dislike:'',loved:''},recs:[],recsAt:null};
-try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign(S,JSON.parse(_d));}catch(e){}
+var S={prefs:{love:'',dislike:'',loved:''},recs:[],recsAt:null,dismissed:[]};
+try{var _d=localStorage.getItem(SK);if(_d)S=Object.assign({dismissed:[]},JSON.parse(_d));}catch(e){}
 function persist(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 function el(id){return document.getElementById(id);}
 function esc(s){return String(s||'').split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');}
-function isStale(ts,ms){return !ts||(Date.now()-ts)>(ms||WEEK);}
+function isStale(ts){return !ts||(Date.now()-ts)>WEEK;}
 function ageStr(ts){
-  if(!ts) return 'never';
-  var age=Date.now()-ts;
-  var m=Math.floor(age/60000),h=Math.floor(m/60),d=Math.floor(h/24);
-  return d>0?(d+'d ago'):h>0?(h+'h ago'):(m+'m ago');
+  if(!ts) return 'never updated';
+  var age=Date.now()-ts,m=Math.floor(age/60000),h=Math.floor(m/60),d=Math.floor(h/24);
+  return d>0?(d+'d ago'):h>0?(h+'h ago'):(m<=1?'just now':(m+'m ago'));
 }
 
 var currentPanel='digest';
 var currentFilter='all';
+var planFilter='all';
+var seenFilter='all';
 var diaryItems=[];
 var tasteOpen=false;
+var digestAt=null;
 
 // ── API ───────────────────────────────────────────────────────────────────────
 function api(body,cb){
-  fetch('/.netlify/functions/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  })
+  fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
   .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d};});})
   .then(function(res){cb(null,res.data);})
   .catch(function(e){cb(e,null);});
 }
 
-// ── Init — NO auto API calls ──────────────────────────────────────────────────
+// ── Init — no auto API calls ──────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',function(){
-  // Restore prefs
   if(S.prefs.love) el('pref-love').value=S.prefs.love;
   if(S.prefs.dislike) el('pref-dislike').value=S.prefs.dislike;
   if(S.prefs.loved) el('pref-loved').value=S.prefs.loved;
-
-  // Load diary from Supabase (free — no AI involved)
   loadDiary();
-
-  // Show cached recs if we have them — no API call
   if(S.recs&&S.recs.length) renderRecs(S.recs,currentFilter);
-
-  // Load digest from Supabase — no AI call, just a DB read
   loadDigestFromSupabase();
-
-  updateMainBtn();
+  updatePanelStatus();
 });
 
-// ── Digest — load from Supabase only, never auto-call AI ─────────────────────
+// ── Digest ────────────────────────────────────────────────────────────────────
 function loadDigestFromSupabase(){
   fetch('/.netlify/functions/digest-trigger',{method:'GET'})
   .then(function(r){return r.json();})
   .then(function(row){
     if(row&&row.content&&row.content.length>50){
-      renderDigest(row.content, row.created_at?new Date(row.created_at).getTime():null);
+      digestAt=row.created_at?new Date(row.created_at).getTime():null;
+      renderDigest(row.content,digestAt);
     }
-    // Never auto-trigger refresh — user must press button
+    updatePanelStatus();
   })
-  .catch(function(){
-    // Supabase read failed silently — user can press Refresh
-  });
+  .catch(function(){updatePanelStatus();});
 }
 
 function refreshDigest(){
   setStatus('Searching for latest reviews — takes about 20 seconds...','info');
-  el('main-btn').disabled=true;
-  // Trigger background function
+  updatePanelStatus('refreshing...');
   fetch('/.netlify/functions/digest-trigger',{method:'POST'})
   .then(function(){
-    // Poll every 6 seconds, up to 10 times (60s)
     var polls=0;
     var poll=setInterval(function(){
       polls++;
-      if(polls>10){
-        clearInterval(poll);
-        setStatus('Taking longer than expected — check back in a minute','err');
-        el('main-btn').disabled=false;
-        return;
-      }
+      if(polls>12){clearInterval(poll);setStatus('Taking longer than expected — check back soon','err');updatePanelStatus();return;}
       fetch('/.netlify/functions/digest-trigger',{method:'GET'})
       .then(function(r){return r.json();})
       .then(function(row){
         if(row&&row.content&&row.content.length>100){
-          // Check it's newer than what we had
           var newTs=row.created_at?new Date(row.created_at).getTime():null;
-          if(newTs&&(!S.digestAt||newTs>S.digestAt)){
+          if(newTs&&(!digestAt||newTs>digestAt)){
             clearInterval(poll);
-            S.digestAt=newTs;persist();
+            digestAt=newTs;
             renderDigest(row.content,newTs);
             setStatus('Digest updated','ok');
             setTimeout(function(){setStatus('');},3000);
-            el('main-btn').disabled=false;
+            updatePanelStatus();
           }
         }
       }).catch(function(){});
     },6000);
   })
-  .catch(function(e){
-    setStatus('Error: '+e.message,'err');
-    el('main-btn').disabled=false;
-  });
+  .catch(function(e){setStatus('Error: '+e.message,'err');updatePanelStatus();});
 }
 
 function renderDigest(text,ts){
@@ -411,12 +421,46 @@ function renderDigest(text,ts){
     +'</div>'
     +'<div class="digest-body">'+paragraphs+'</div>'
     +'<div class="digest-sources">Sources searched: The Guardian &middot; The Times &middot; The Telegraph &middot; The Arts Desk &middot; BBC Culture &middot; Time Out London &middot; The Stage &middot; The Reviews Hub</div>';
-  S.digestAt=ts;persist();
-  updateCacheBar();
-  updateMainBtn();
+  digestAt=ts;
+  updatePanelStatus();
 }
 
-// ── For You — only fetches when user presses Find events ─────────────────────
+// ── Panel status lines (inside each panel, not nav) ───────────────────────────
+function updatePanelStatus(override){
+  // Digest status
+  var ds=el('digest-status');
+  if(ds){
+    if(override){
+      ds.style.display='flex';ds.className='panel-status info';
+      ds.innerHTML='<span>'+override+'</span>';
+    } else if(digestAt){
+      var stale=isStale(digestAt);
+      ds.style.display='flex';
+      ds.className='panel-status '+(stale?'stale':'fresh');
+      ds.innerHTML=(stale?'&#9888; ':'&#10003; ')+'Digest updated '+ageStr(digestAt)
+        +' &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Refresh digest</a>';
+    } else {
+      ds.style.display='flex';ds.className='panel-status stale';
+      ds.innerHTML='No digest yet &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Get this week\'s digest</a>';
+    }
+  }
+  // For You status
+  var fs=el('foryou-status');
+  if(fs){
+    if(S.recs&&S.recs.length&&S.recsAt){
+      var stale2=isStale(S.recsAt);
+      fs.style.display='flex';
+      fs.className='panel-status '+(stale2?'stale':'fresh');
+      fs.innerHTML=(stale2?'&#9888; ':'&#10003; ')+'Recommendations updated '+ageStr(S.recsAt)
+        +' &nbsp;&middot;&nbsp; <a onclick="findEvents()">Refresh events</a>';
+    } else {
+      fs.style.display='flex';fs.className='panel-status stale';
+      fs.innerHTML='No recommendations yet &nbsp;&middot;&nbsp; <a onclick="findEvents()">Find events</a>';
+    }
+  }
+}
+
+// ── For You ───────────────────────────────────────────────────────────────────
 var CATALOGUE={
   art:'Tracey Emin/Tate Modern (until Aug 2026, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/02/27/tracey-emin), Hepworth in Colour/Courtauld (Jun-Sep, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/12/the-joseph-hage-aaronson-bremen-exhibition-hepworth-in-colour), Ana Mendieta/Tate Modern (from Jul 9, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/07/09/ana-mendieta), Frida Kahlo/Tate Modern (from Jun 25, artfundUrl:https://www.artfund.org/explore/exhibitions/2026/06/25/frida-the-making-of-an-icon), Hurvin Anderson/Tate Britain (until Aug 23), Project a Black Planet/Barbican (Jun-Sep).',
   theatre:'Glengarry Glen Ross/Old Vic (until Jul 18), Arcadia/Duke of Yorks (Jun 20-Sep 12), To Kill a Mockingbird/West End (from Jun 25), A Midsummer Nights Dream/Regents Park Open Air (Jun 20-Jul 18).',
@@ -433,8 +477,7 @@ function buildPrompt(type,prefs){
 }
 
 function callClaude(type,prefs,cb){
-  api({
-    model:'claude-sonnet-4-6',max_tokens:1500,
+  api({model:'claude-sonnet-4-6',max_tokens:1500,
     system:'Return ONLY a valid JSON array. No markdown, no backticks. Start [ end ].',
     messages:[{role:'user',content:buildPrompt(type,prefs)}]
   },function(err,data){
@@ -447,7 +490,9 @@ function callClaude(type,prefs,cb){
 }
 
 function findEvents(){
-  setBusy(true);setProg(5);el('recs-empty').style.display='none';
+  var btn=el('foryou-status').querySelector('a');
+  if(btn) btn.textContent='Finding...';
+  setProg(5);el('recs-empty').style.display='none';
   var prefs=getPrefs();
   var results=[];
   var types=['art','theatre','film','tv'];
@@ -455,17 +500,17 @@ function findEvents(){
   var step=0;
   function next(){
     if(step>=4){
-      setProg(null);setBusy(false);
+      setProg(null);
       S.recs=results;S.recsAt=Date.now();persist();
-      renderRecs(results,currentFilter);updateCounts(results);updateCacheBar();updateMainBtn();
+      renderRecs(results,currentFilter);updateCounts(results);
+      updatePanelStatus();
       setStatus('Loaded '+results.length+' events — cached for 7 days','ok');
       setTimeout(function(){setStatus('');},5000);
       return;
     }
-    var type=types[step];
-    setStatus('Finding '+labels[type]+' events ('+(step+1)+' of 4)...');
+    setStatus('Finding '+labels[types[step]]+' events ('+(step+1)+' of 4)...');
     setProg(5+(step*22));
-    callClaude(type,prefs,function(err,batch){
+    callClaude(types[step],prefs,function(err,batch){
       if(!err&&batch) results=results.concat(batch);
       step++;setTimeout(next,400);
     });
@@ -480,45 +525,38 @@ function showPanel(id){
     el('panel-'+p).classList.toggle('active',p===id);
     el('ntab-'+p).classList.toggle('active',p===id);
   });
-  el('subnav').classList.toggle('show',id==='foryou');
+  // Show correct subnav
+  ['foryou','plan','seen'].forEach(function(p){
+    var sn=el('subnav-'+p);
+    if(sn) sn.style.display=(p===id)?'block':'none';
+  });
   if(id==='plan') renderPlan();
   if(id==='seen') renderSeen();
-  updateMainBtn();
-  updateCacheBar();
+  updatePanelStatus();
 }
 
-function updateMainBtn(){
-  var btn=el('main-btn');
-  if(currentPanel==='digest'){
-    btn.textContent='Refresh digest';btn.style.display='inline-block';
-  } else if(currentPanel==='foryou'){
-    btn.textContent='Find events';btn.style.display='inline-block';
-  } else {
-    btn.style.display='none';
-  }
-}
-
-function handleMainBtn(){
-  if(currentPanel==='digest') refreshDigest();
-  else if(currentPanel==='foryou') findEvents();
-}
-
-function updateCacheBar(){
-  var bar=el('cache-bar');
-  var ts=currentPanel==='digest'?S.digestAt:currentPanel==='foryou'?S.recsAt:null;
-  if(!ts){bar.className='cache-bar';return;}
-  var stale=isStale(ts);
-  bar.className='cache-bar show '+(stale?'stale':'fresh');
-  var label=currentPanel==='digest'?'Digest':'Recommendations';
-  bar.textContent=(stale?'⚠ ':' ✓ ')+label+' updated '+ageStr(ts)+(stale?' · press Refresh to update':'');
-}
-
-function setFilter(type){
-  currentFilter=type;
-  ['all','art','theatre','film','tv'].forEach(function(t){
-    var s=el('stab-'+t);if(s)s.classList.toggle('active',t===type);
+function setFilter(f){
+  currentFilter=f;
+  ['all','tv','film','art','theatre'].forEach(function(t){
+    var s=el('stab-'+t);if(s)s.classList.toggle('active',t===f);
   });
-  renderRecs(S.recs,type);
+  renderRecs(S.recs,f);
+}
+
+function setPlanFilter(f){
+  planFilter=f;
+  ['all','tv','film','art','theatre'].forEach(function(t){
+    var s=el('pstab-'+t);if(s)s.classList.toggle('active',t===f);
+  });
+  renderPlan();
+}
+
+function setSeenFilter(f){
+  seenFilter=f;
+  ['all','tv','film','art','theatre'].forEach(function(t){
+    var s=el('sstab-'+t);if(s)s.classList.toggle('active',t===f);
+  });
+  renderSeen();
 }
 
 // ── Taste ─────────────────────────────────────────────────────────────────────
@@ -530,13 +568,9 @@ function toggleTaste(){
 }
 function getPrefs(){return{love:el('pref-love').value,dislike:el('pref-dislike').value,loved:el('pref-loved').value};}
 function savePrefs(){
-  S.prefs=getPrefs();
-  // Clear recs cache so next Find events uses new prefs
-  S.recs=[];S.recsAt=null;
-  persist();
-  el('prefs-ok').style.display='inline';
-  setTimeout(function(){el('prefs-ok').style.display='none';},2500);
-  renderRecs([],currentFilter);
+  S.prefs=getPrefs();S.recs=[];S.recsAt=null;S.dismissed=[];persist();
+  el('prefs-ok').style.display='inline';setTimeout(function(){el('prefs-ok').style.display='none';},2500);
+  renderRecs([],currentFilter);updatePanelStatus();
 }
 function getDiaryCtx(){
   var seen=diaryItems.filter(function(d){return d.seen_at&&d.rating>0;});
@@ -569,13 +603,13 @@ function setStatus(msg,type){
   spin.style.display=(type&&type!=='info')?'none':'block';
   txt.textContent=msg;
 }
-function setBusy(b){el('main-btn').disabled=b;}
 function setProg(p){if(p===null){el('prog').style.display='none';return;}el('prog').style.display='block';el('prog-fill').style.width=p+'%';}
 
 // ── Render recs ───────────────────────────────────────────────────────────────
 var TC={art:'#b05030',theatre:'#6030a0',film:'#1060a0',tv:'#108050'};
 var TBG={art:'#fef0ea',theatre:'#f3eef9',film:'#e8f0fa',tv:'#eafaf2'};
-var TL={art:'Art exhibitions',theatre:'Theatre',film:'Film',tv:'TV & streaming'};
+var TL={tv:'TV & streaming',film:'Film',art:'Art exhibitions',theatre:'Theatre'};
+var TYPE_ORDER=['tv','film','art','theatre'];
 var TI={
   art:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="10" rx="1"/><circle cx="5.5" cy="5.5" r="1.5"/><path d="M2 10l3-3 3 3 2-2 4 4"/></svg>',
   theatre:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.5" cy="7" r="3"/><circle cx="10.5" cy="7" r="3"/><path d="M4 13q.75-2 1.5-2t1.5 2M9 13q.75-2 1.5-2t1.5 2"/></svg>',
@@ -590,18 +624,28 @@ function updateCounts(recs){
   var all=el('ct-all');if(all)all.textContent=total||'';
 }
 
+// Items hidden from For You: dismissed + already saved to diary
+function isHidden(ev){
+  if(S.dismissed.indexOf(ev.title)>=0) return true;
+  if(diaryItems.some(function(d){return d.title===ev.title;})) return true;
+  return false;
+}
+
 function renderRecs(recs,filter){
   var list=el('recs-list'),empty=el('recs-empty');
   list.innerHTML='';
   if(!recs||!recs.length){empty.style.display='block';return;}
-  var filtered=filter&&filter!=='all'?recs.filter(function(e){return e.type===filter;}):recs;
-  if(!filtered.length){empty.style.display='block';empty.querySelector('p').textContent='No events in this category — press Find events.';return;}
+  // Filter out dismissed and saved
+  var visible=recs.filter(function(e){return !isHidden(e);});
+  if(filter&&filter!=='all') visible=visible.filter(function(e){return e.type===filter;});
+  if(!visible.length){empty.style.display='block';empty.querySelector('p').textContent='No events to show — press Refresh events for new recommendations.';return;}
   empty.style.display='none';
   updateCounts(recs);
   if(!filter||filter==='all'){
-    var groups={art:[],theatre:[],film:[],tv:[]};
-    filtered.forEach(function(e){if(groups[e.type])groups[e.type].push(e);});
-    ['art','theatre','film','tv'].forEach(function(type){
+    var groups={};
+    TYPE_ORDER.forEach(function(t){groups[t]=[];});
+    visible.forEach(function(e){if(groups[e.type])groups[e.type].push(e);});
+    TYPE_ORDER.forEach(function(type){
       var grp=groups[type];if(!grp||!grp.length)return;
       var hdr=document.createElement('div');
       hdr.className='section-hdr';hdr.style.color=TC[type];
@@ -610,12 +654,11 @@ function renderRecs(recs,filter){
       grp.forEach(function(ev,i){list.appendChild(makeCard(ev,i));});
     });
   } else {
-    filtered.forEach(function(ev,i){list.appendChild(makeCard(ev,i));});
+    visible.forEach(function(ev,i){list.appendChild(makeCard(ev,i));});
   }
 }
 
 function makeCard(ev,i){
-  var inD=diaryItems.some(function(d){return d.title===ev.title;});
   var type=ev.type||'art';
   var badge=i===0?'<span class="badge badge-top">Top pick</span>':((ev.matchScore||0)>=87?'<span class="badge badge-hi">Strong match</span>':'');
   var card=document.createElement('div');card.className='ecard';
@@ -628,12 +671,18 @@ function makeCard(ev,i){
     +(ev.summary?'<div class="esummary">'+esc(ev.summary)+'</div>':'')
     +(ev.press?'<div class="epress">'+esc(ev.press)+'</div>':'')
     +(ev.artfundUrl?'<div class="eaf"><a href="'+esc(ev.artfundUrl)+'" target="_blank">View on Art Fund &rarr;</a></div>':'')
-    +'</div><div class="score-col">'
+    +'</div>'
+    +'<div class="score-col">'
     +'<div class="score-n" style="color:'+TC[type]+'">'+(ev.matchScore||'&mdash;')+'<span class="score-sm">%</span></div>'
     +'<div class="score-l">match</div>'
-    +'<button class="btn-save'+(inD?' saved':'')+'">'+(inD?'&#10003; Saved':'+ Save')+'</button>'
+    +'<div class="card-btns">'
+    +'<button class="btn-save">+ Save</button>'
     +(ev.bookingUrl?'<a class="book-link" href="'+esc(ev.bookingUrl)+'" target="_blank">Book &rarr;</a>':'')
+    +'<button class="btn-more">More &rarr;</button>'
+    +'<button class="btn-dismiss">Not interested</button>'
+    +'</div>'
     +'</div></div>';
+
   card.querySelector('.btn-save').addEventListener('click',function(){
     var btn=this;
     if(btn.classList.contains('saved')) return;
@@ -643,9 +692,23 @@ function makeCard(ev,i){
       summary:ev.summary||'',press:ev.press||'',matchReason:ev.matchReason||'',
       note:'',rating:0,source:'rec'
     },function(){
-      btn.innerHTML='&#10003; Saved';btn.classList.add('saved');btn.disabled=false;
+      // Hide card — saved items don't show in For You
+      card.style.transition='opacity .3s';card.style.opacity='0';
+      setTimeout(function(){card.remove();},300);
     });
   });
+
+  card.querySelector('.btn-dismiss').addEventListener('click',function(){
+    if(S.dismissed.indexOf(ev.title)<0) S.dismissed.push(ev.title);
+    persist();
+    card.style.transition='opacity .3s';card.style.opacity='0';
+    setTimeout(function(){card.remove();},300);
+  });
+
+  card.querySelector('.btn-more').addEventListener('click',function(){
+    showReviews(ev.title, ev.type, ev.venue||'');
+  });
+
   return card;
 }
 
@@ -656,6 +719,7 @@ function loadDiary(){
     diaryItems=data;
     if(el('panel-plan').classList.contains('active')) renderPlan();
     if(el('panel-seen').classList.contains('active')) renderSeen();
+    updateTasteLearned();
   });
 }
 function saveDiaryItem(item,cb){
@@ -683,18 +747,24 @@ function renderPlan(){
   var list=el('plan-list'),empty=el('plan-empty');
   list.innerHTML='';
   var items=diaryItems.filter(function(d){return !d.seen_at;});
+  if(planFilter!=='all') items=items.filter(function(d){return d.type===planFilter;});
   if(!items.length){empty.style.display='block';return;}
   empty.style.display='none';
-  var recs=items.filter(function(d){return d.source==='rec';});
-  var manual=items.filter(function(d){return d.source!=='rec';});
-  if(recs.length){
-    list.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--green)">Saved from recommendations</div>');
-    recs.forEach(function(item){list.appendChild(makeDiaryCard(item));});
-  }
-  if(manual.length){
-    list.insertAdjacentHTML('beforeend','<div class="section-hdr" style="color:var(--blue)">Added manually</div>');
-    manual.forEach(function(item){list.appendChild(makeDiaryCard(item));});
-  }
+  // Group by type in TV/Film/Art/Theatre order
+  var groups={};
+  TYPE_ORDER.forEach(function(t){groups[t]=[];});
+  items.forEach(function(d){if(groups[d.type])groups[d.type].push(d);else groups[d.type]=[d];});
+  var hasMultiple=TYPE_ORDER.filter(function(t){return groups[t]&&groups[t].length;}).length>1;
+  TYPE_ORDER.forEach(function(type){
+    var grp=groups[type];if(!grp||!grp.length)return;
+    if(hasMultiple&&planFilter==='all'){
+      var hdr=document.createElement('div');
+      hdr.className='section-hdr';hdr.style.color=TC[type];
+      hdr.textContent=TL[type]+' ('+grp.length+')';
+      list.appendChild(hdr);
+    }
+    grp.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+  });
 }
 
 // ── Seen ──────────────────────────────────────────────────────────────────────
@@ -702,9 +772,23 @@ function renderSeen(){
   var list=el('seen-list'),empty=el('seen-empty');
   list.innerHTML='';
   var items=diaryItems.filter(function(d){return !!d.seen_at;});
+  if(seenFilter!=='all') items=items.filter(function(d){return d.type===seenFilter;});
   if(!items.length){empty.style.display='block';return;}
   empty.style.display='none';
-  items.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+  var groups={};
+  TYPE_ORDER.forEach(function(t){groups[t]=[];});
+  items.forEach(function(d){if(groups[d.type])groups[d.type].push(d);else groups[d.type]=[d];});
+  var hasMultiple=TYPE_ORDER.filter(function(t){return groups[t]&&groups[t].length;}).length>1;
+  TYPE_ORDER.forEach(function(type){
+    var grp=groups[type];if(!grp||!grp.length)return;
+    if(hasMultiple&&seenFilter==='all'){
+      var hdr=document.createElement('div');
+      hdr.className='section-hdr';hdr.style.color=TC[type];
+      hdr.textContent=TL[type]+' ('+grp.length+')';
+      list.appendChild(hdr);
+    }
+    grp.forEach(function(item){list.appendChild(makeDiaryCard(item));});
+  });
 }
 
 // ── Diary card ────────────────────────────────────────────────────────────────
@@ -721,7 +805,10 @@ function makeDiaryCard(item){
     +'<div style="font-size:16px;font-weight:700">'+esc(item.title)+'</div>'
     +'<div style="font-size:12px;color:'+tc+';margin-top:3px;font-family:sans-serif">'+esc(item.type||'')+(item.venue?' &middot; '+esc(item.venue):'')+(item.dates?' &middot; '+esc(item.dates):'')+'</div>'
     +(item.summary?'<div class="dsummary">'+esc(item.summary)+'</div>':'')
-    +'<div class="stars">'+stars+'</div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">'
+    +'<div class="stars" style="margin-top:0">'+stars+'</div>'
+    +'<button class="btn-more-diary" style="font-size:11px;padding:3px 9px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:none;font-family:sans-serif" data-title="'+esc(item.title)+'" data-type="'+esc(item.type||'')+'" data-venue="'+esc(item.venue||'')+'">More &rarr;</button>'
+    +'</div>'
     +'<textarea class="dnote" placeholder="'+(isSeen?'Post-visit notes...':'Notes...')+'" data-id="'+item.id+'">'+esc(item.note||'')+'</textarea>'
     +(isSeen?'<textarea class="dnote" style="margin-top:6px" placeholder="Further comments..." data-id="'+item.id+'" data-field="note2">'+esc(item.note2||'')+'</textarea>':'')
     +'<div class="dcard-actions">'
@@ -739,12 +826,14 @@ function makeDiaryCard(item){
   });
   c.querySelectorAll('.dnote').forEach(function(t){
     t.addEventListener('change',function(){
-      var f=this.dataset.field||'note';
-      var fields={};fields[f]=this.value;
+      var f=this.dataset.field||'note';var fields={};fields[f]=this.value;
       updateDiaryItem(this.dataset.id,fields);
     });
   });
   c.querySelector('.rem').addEventListener('click',function(){deleteDiaryItem(this.dataset.id);});
+  c.querySelector('.btn-more-diary').addEventListener('click',function(){
+    showReviews(this.dataset.title, this.dataset.type, this.dataset.venue);
+  });
   return c;
 }
 
@@ -753,16 +842,14 @@ function markSeen(btn){
   updateDiaryItem(id,{seen_at:now});
   var item=diaryItems.find(function(d){return d.id===id;});
   if(item) item.seen_at=now;
-  renderPlan();renderSeen();
-  showPanel('seen');
+  renderPlan();renderSeen();showPanel('seen');
 }
 function markUnseen(btn){
   var id=btn.dataset.id;
   updateDiaryItem(id,{seen_at:null});
   var item=diaryItems.find(function(d){return d.id===id;});
   if(item) item.seen_at=null;
-  renderPlan();renderSeen();
-  showPanel('plan');
+  renderPlan();renderSeen();showPanel('plan');
 }
 
 // ── Add manual ────────────────────────────────────────────────────────────────
@@ -772,6 +859,61 @@ function toggleAddForm(){
   form.classList.toggle('open',open);
   if(open) el('add-title').focus();
 }
+// ── Reviews ───────────────────────────────────────────────────────────────────
+function showReviews(title, type, venue){
+  var modal=document.getElementById('reviews-modal');
+  var body=document.getElementById('reviews-body');
+  var titleEl=document.getElementById('reviews-title');
+  titleEl.textContent='Reviews: '+title;
+  body.innerHTML='<div style="color:var(--text3);font-family:sans-serif;display:flex;align-items:center;gap:8px"><div class="spinner"></div>Searching for reviews...</div>';
+  modal.style.display='block';
+  document.body.style.overflow='hidden';
+
+  var prompt='Search the web for reviews of "'+title+'"'+(venue?' at '+venue:'')
+    +' from UK publications including The Guardian, The Times, The Telegraph, The Arts Desk, Time Out, BBC Culture, The Stage.'
+    +' Summarise the critical reception in 200-300 words. Include star ratings where given, and 2-3 short attributed quotes from critics.'
+    +' End with a one-line verdict. Write in plain prose, no bullet points.';
+
+  fetch('/.netlify/functions/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:600,
+      system:'You are a UK arts critic. Search the web and summarise critical reception concisely.',
+      messages:[{role:'user',content:prompt}],
+      use_web_search:true
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(data.error){
+      body.innerHTML='<p style="color:var(--red)">Error: '+(typeof data.error==='string'?data.error:JSON.stringify(data.error))+'</p>';
+      return;
+    }
+    var text=(data.content||[]).map(function(b){return b.text||'';}).join('').trim();
+    if(!text){body.innerHTML='<p style="color:var(--text3)">No reviews found.</p>';return;}
+    text=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    text=text.replace(/\*(.*?)\*/g,'<em>$1</em>');
+    var paras=text.split(/
+
++/).map(function(p){return p.trim()?'<p style="margin-bottom:.9rem">'+p+'</p>':'';}).join('');
+    body.innerHTML=paras
+      +'<div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:sans-serif">'
+      +'Sources searched: Guardian &middot; Times &middot; Telegraph &middot; Arts Desk &middot; Time Out &middot; BBC Culture &middot; The Stage</div>';
+  })
+  .catch(function(e){
+    body.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';
+  });
+}
+
+function closeReviews(e){
+  if(e.target===document.getElementById('reviews-modal')){
+    document.getElementById('reviews-modal').style.display='none';
+    document.body.style.overflow='';
+  }
+}
+
 function addManual(){
   var title=el('add-title').value.trim();
   if(!title){el('add-title').focus();return;}
@@ -798,5 +940,16 @@ function addManual(){
   } else { doSave(notes); }
 }
 </script>
+
+<!-- Reviews modal -->
+<div id="reviews-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5)" onclick="closeReviews(event)">
+  <div style="position:absolute;right:0;top:0;bottom:0;width:min(520px,100%);background:var(--bg);overflow-y:auto;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:1">
+      <div style="font-size:14px;font-weight:700" id="reviews-title">Reviews</div>
+      <button onclick="document.getElementById('reviews-modal').style.display='none'" style="font-size:20px;color:var(--text3);background:none;border:none;cursor:pointer;padding:0 4px;line-height:1">&#10005;</button>
+    </div>
+    <div id="reviews-body" style="padding:1.25rem;flex:1;font-size:14px;line-height:1.7;color:var(--text)"></div>
+  </div>
+</div>
 </body>
 </html>
