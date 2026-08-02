@@ -258,7 +258,7 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
       <div class="digest-empty">
         <div class="ei" style="font-size:36px;margin-bottom:12px;opacity:.4">&#9675;</div>
         <p>No digest yet.</p>
-        <button onclick="refreshDigest()" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Get this week&#39;s digest</button>
+        <button id="digest-empty-btn" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Get this week's digest</button>
         <p style="margin-top:1rem;font-size:13px;color:var(--text3)">Searches The Guardian, Times, Telegraph, Time Out and more.<br>Takes about 20 seconds. Cached for a week.</p>
       </div>
     </div>
@@ -271,7 +271,7 @@ textarea.pi{font-size:13px;padding:10px 12px;border-radius:var(--rs);border:1px 
     <div class="empty" id="recs-empty">
       <div class="ei">&#9675;</div>
       <p>No recommendations yet.</p>
-      <button onclick="findEvents()" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Find events</button>
+      <button id="foryou-empty-btn" style="margin-top:1rem;font-size:13px;padding:8px 18px;border-radius:var(--rs);background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:inherit;font-weight:700">Find events</button>
       <p style="margin-top:1rem;font-size:13px;color:var(--text3)">Matched to your taste across art, theatre, film and TV.<br>Cached for 7 days.</p>
     </div>
   </div>
@@ -368,6 +368,12 @@ window.addEventListener('DOMContentLoaded',function(){
   }
   // Always show panel status immediately
   updatePanelStatus();
+
+  // Wire up empty state buttons (must happen after DOM ready)
+  var deb=el('digest-empty-btn');
+  if(deb) deb.addEventListener('click',function(){refreshDigest();});
+  var feb=el('foryou-empty-btn');
+  if(feb) feb.addEventListener('click',function(){findEvents();});
   // Load diary (free Supabase read)
   loadDiary();
   // Load digest from Supabase (free read, no AI)
@@ -449,10 +455,12 @@ function updatePanelStatus(override){
       var stale=isStale(digestAt);
       ds.className='panel-status '+(stale?'stale':'fresh');
       ds.innerHTML=(stale?'&#9888; ':'&#10003; ')+'Digest updated '+ageStr(digestAt)
-        +' &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Refresh digest</a>';
+        +' &nbsp;&middot;&nbsp; <a id="ds-refresh" style="cursor:pointer">Refresh digest</a>';
+      var dsr=document.getElementById('ds-refresh');
+      if(dsr) dsr.addEventListener('click',function(){refreshDigest();});
     } else {
       ds.className='panel-status stale';
-      ds.innerHTML='&#9888; No digest yet &nbsp;&middot;&nbsp; <a onclick="refreshDigest()">Get this week's digest</a>';
+      ds.innerHTML='&#9888; No digest yet &nbsp;&middot;&nbsp; <a id="ds-nodigest2" style="cursor:pointer">Get this week's digest</a>';
     }
   }
   // For You status — always visible
@@ -463,10 +471,14 @@ function updatePanelStatus(override){
       var stale2=isStale(S.recsAt);
       fs.className='panel-status '+(stale2?'stale':'fresh');
       fs.innerHTML=(stale2?'&#9888; ':'&#10003; ')+'Recommendations updated '+ageStr(S.recsAt)
-        +' &nbsp;&middot;&nbsp; <a onclick="findEvents()">Refresh events</a>';
+        +' &nbsp;&middot;&nbsp; <a id="fs-refresh" style="cursor:pointer">Refresh events</a>';
+      var fsr=document.getElementById('fs-refresh');
+      if(fsr) fsr.addEventListener('click',function(){findEvents();});
     } else {
       fs.className='panel-status stale';
-      fs.innerHTML='&#9888; No recommendations yet &nbsp;&middot;&nbsp; <a onclick="findEvents()">Find events</a>';
+      fs.innerHTML='&#9888; No recommendations yet &nbsp;&middot;&nbsp; <a id="fs-link" style="cursor:pointer">Find events</a>';
+      var fsl=document.getElementById('fs-link');
+      if(fsl) fsl.addEventListener('click',function(){findEvents();});
     }
   }
 };
@@ -956,3 +968,4 @@ function addManual(){
 </div>
 </body>
 </html>
+      setTimeout(function(){var x=document.getElementById('ds-nodigest2');if(x)x.addEventListener('click',refreshDigest);},0);
